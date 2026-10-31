@@ -1,0 +1,29 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Data (user data, never in git)
+data/
+data-dev/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Skill local de Pinokio. No es parte del release y su requirements.txt
+# hace que un SCA resuelva gradio y, con eso, pillow.
+.cursor/skills/gepeto/
+
+# Exports
+*.xlsx
+*.csv
+
+# Generated installers (Windows + Linux)
+dist/
+frontend/node_modules/

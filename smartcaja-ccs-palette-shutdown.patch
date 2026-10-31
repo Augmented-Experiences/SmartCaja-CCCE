@@ -1,0 +1,1105 @@
+From 823386f9929278ea19e2ae25ac0318c50113d7cd Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Wed, 16 Sep 2026 20:41:30 +0000
+Subject: [PATCH] feat: apply CCS palette and hard shutdown
+
+---
+ app/app.js                      |  42 ++++++-------
+ app/index.html                  |  81 ++++++++++++------------
+ desktop/brand/ccs-theme.css     |  45 ++++++--------
+ desktop/scripts/configure.mjs   |   2 +-
+ desktop/smartsuite.config.json  |   2 +-
+ desktop/src-tauri/src/main.rs   | 106 ++++++++++++++++++++++++--------
+ desktop/ui/accent.css           |   2 +-
+ desktop/ui/ccs-theme.css        |  45 ++++++--------
+ desktop/ui/index.html           |  14 ++---
+ desktop/ui/splash.template.html |  14 ++---
+ install.json                    |  24 ++++----
+ pinokio.js                      |   2 +-
+ start.json                      |  14 ++---
+ stop.json                       |   2 +-
+ update.js                       |   2 +-
+ 15 files changed, 222 insertions(+), 175 deletions(-)
+
+diff --git a/app/app.js b/app/app.js
+index d6a7e1a..5d5731b 100644
+--- a/app/app.js
++++ b/app/app.js
+@@ -696,13 +696,13 @@ function renderCashflowChart(months) {
+       datasets: [{
+         label: 'Saldo Acumulado',
+         data: months.map(m => m.cumulative_balance),
+-        borderColor: '#173A7A',
+-        backgroundColor: 'rgba(23,58,122,0.08)',
++        borderColor: '#002558',
++        backgroundColor: 'rgba(0,37,88,0.08)',
+         fill: true,
+         tension: 0.3,
+         pointRadius: 4,
+-        pointBackgroundColor: '#F4C10E',
+-        pointBorderColor: '#173A7A',
++        pointBackgroundColor: '#00D53A',
++        pointBorderColor: '#002558',
+       }]
+     },
+     options: {
+@@ -724,7 +724,7 @@ function renderIncomeExpenseChart(months) {
+     data: {
+       labels: months.map(m => m.label || m.month),
+       datasets: [
+-        { label: 'Ingresos', data: months.map(m => m.income?.total || m.income_total || 0), backgroundColor: 'rgba(61,174,43,0.7)', borderRadius: 4 },
++        { label: 'Ingresos', data: months.map(m => m.income?.total || m.income_total || 0), backgroundColor: 'rgba(0,213,58,0.7)', borderRadius: 4 },
+         { label: 'Gastos', data: months.map(m => m.expenses?.total || m.expenses_total || 0), backgroundColor: 'rgba(220,38,38,0.6)', borderRadius: 4 },
+       ]
+     },
+@@ -903,16 +903,16 @@ function renderSimulationChart(months) {
+         {
+           label: 'Saldo Acumulado',
+           data: balances,
+-          borderColor: '#2E6FC0',
+-          backgroundColor: 'rgba(46,111,192,0.08)',
++          borderColor: '#3A89DA',
++          backgroundColor: 'rgba(58,137,218,0.08)',
+           fill: true,
+           tension: 0.3,
+         },
+         {
+           label: 'Flujo Neto Mensual',
+           data: netFlows,
+-          borderColor: '#3DAE2B',
+-          backgroundColor: 'rgba(61,174,43,0.08)',
++          borderColor: '#00D53A',
++          backgroundColor: 'rgba(0,213,58,0.08)',
+           fill: false,
+           tension: 0.3,
+           borderDash: [5, 5],
+@@ -1029,9 +1029,9 @@ function renderMonteCarloResults(data) {
+       data: {
+         labels,
+         datasets: [
+-          { label: 'P95', data: data.bandas_mensuales.map(b => b.p95), borderColor: 'rgba(244,193,14,0.7)', fill: false, borderDash: [5,5], pointRadius: 0 },
+-          { label: 'P75', data: data.bandas_mensuales.map(b => b.p75), borderColor: 'rgba(244,193,14,0.45)', backgroundColor: 'rgba(244,193,14,0.08)', fill: '+1', pointRadius: 0 },
+-          { label: 'Mediana', data: data.bandas_mensuales.map(b => b.p50), borderColor: '#173A7A', borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#F4C10E' },
++          { label: 'P95', data: data.bandas_mensuales.map(b => b.p95), borderColor: 'rgba(0,213,58,0.7)', fill: false, borderDash: [5,5], pointRadius: 0 },
++          { label: 'P75', data: data.bandas_mensuales.map(b => b.p75), borderColor: 'rgba(0,213,58,0.45)', backgroundColor: 'rgba(0,213,58,0.08)', fill: '+1', pointRadius: 0 },
++          { label: 'Mediana', data: data.bandas_mensuales.map(b => b.p50), borderColor: '#002558', borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#00D53A' },
+           { label: 'P25', data: data.bandas_mensuales.map(b => b.p25), borderColor: 'rgba(206,17,38,0.35)', backgroundColor: 'rgba(206,17,38,0.06)', fill: '+1', pointRadius: 0 },
+           { label: 'P5', data: data.bandas_mensuales.map(b => b.p5), borderColor: 'rgba(206,17,38,0.6)', fill: false, borderDash: [5,5], pointRadius: 0 },
+         ]
+@@ -1194,7 +1194,7 @@ async function loadSettings() {
+           <h4 style="margin:0 0 12px; font-size:13px; color:var(--ccs-azul-oscuro);"><i class="fas fa-brain"></i> Modelos Instalados</h4>
+           <div style="display:flex; flex-wrap:wrap; gap:6px;">
+             ${models.length > 0 ? models.map(m => `
+-              <span style="padding:4px 10px; background:rgba(23,58,122,0.06); border:1px solid rgba(23,58,122,0.15); border-radius:12px; font-size:11px; color:var(--ccs-azul);">${escapeHtml(m)}</span>
++              <span style="padding:4px 10px; background:rgba(0,37,88,0.06); border:1px solid rgba(0,37,88,0.15); border-radius:12px; font-size:11px; color:var(--ccs-azul);">${escapeHtml(m)}</span>
+             `).join('') : '<span style="color:var(--text-muted); font-size:12px;">No hay modelos instalados</span>'}
+           </div>
+         </div>
+@@ -1206,10 +1206,10 @@ async function loadSettings() {
+             <button class="btn btn-sm" style="background:var(--ccs-azul); color:#fff; font-size:11px; padding:8px 12px; text-align:left;" onclick="resetTokenStats()">
+               <i class="fas fa-redo"></i> Resetear estad\u00edsticas de tokens
+             </button>
+-            <button class="btn btn-sm" style="background:rgba(23,58,122,0.08); color:var(--ccs-azul); font-size:11px; padding:8px 12px; text-align:left;" onclick="navigateTo('agents')">
++            <button class="btn btn-sm" style="background:rgba(0,37,88,0.08); color:var(--ccs-azul); font-size:11px; padding:8px 12px; text-align:left;" onclick="navigateTo('agents')">
+               <i class="fas fa-robot"></i> Configurar agentes y prompts
+             </button>
+-            <button class="btn btn-sm" style="background:rgba(23,58,122,0.08); color:var(--ccs-azul); font-size:11px; padding:8px 12px; text-align:left;" onclick="navigateTo('tokens')">
++            <button class="btn btn-sm" style="background:rgba(0,37,88,0.08); color:var(--ccs-azul); font-size:11px; padding:8px 12px; text-align:left;" onclick="navigateTo('tokens')">
+               <i class="fas fa-chart-bar"></i> Ver uso de tokens
+             </button>
+           </div>
+@@ -1225,7 +1225,7 @@ async function loadSettings() {
+                 <div style="font-size:12px; font-weight:600;">${escapeHtml(a.name || a.id)}</div>
+                 <div style="font-size:10px; color:var(--text-muted);">${escapeHtml(a.model || 'sin modelo')}</div>
+               </div>
+-              <span style="font-size:10px; padding:2px 6px; background:rgba(61,174,43,0.1); color:var(--ccs-verde); border-radius:8px;">T:${a.temperature || 0.7}</span>
++              <span style="font-size:10px; padding:2px 6px; background:rgba(0,213,58,0.1); color:var(--ccs-verde); border-radius:8px;">T:${a.temperature || 0.7}</span>
+             </div>
+           `).join('')}
+         </div>
+@@ -1237,7 +1237,7 @@ async function loadSettings() {
+         <div class="card" style="padding:20px;">
+           <h4 style="margin:0 0 8px; font-size:14px; color:var(--ccs-azul-oscuro);"><i class="fas fa-file-export"></i> Exportar datos</h4>
+           <p style="margin:0 0 16px; font-size:12px; color:var(--text-muted);">Descarga un archivo con todas tus empresas, entrevistas, cashflows, simulaciones, agentes y configuraci\u00f3n. El archivo incluye un hash SHA-256 que impide su modificaci\u00f3n.</p>
+-          <div id="exportInfo" style="margin-bottom:12px; padding:10px; background:rgba(23,58,122,0.04); border-radius:8px; border:1px solid var(--border); font-size:12px;"></div>
++          <div id="exportInfo" style="margin-bottom:12px; padding:10px; background:rgba(0,37,88,0.04); border-radius:8px; border:1px solid var(--border); font-size:12px;"></div>
+           <button class="btn btn-sm" style="background:var(--ccs-azul); color:#fff; font-size:12px; padding:10px 16px;" onclick="exportAllData()" id="btnExportAll">
+             <i class="fas fa-download"></i> Descargar archivo de exportaci\u00f3n
+           </button>
+@@ -1329,7 +1329,7 @@ function _processImportFile(file) {
+     return;
+   }
+   statusEl.style.display = 'block';
+-  statusEl.style.background = 'rgba(23,58,122,0.04)';
++  statusEl.style.background = 'rgba(0,37,88,0.04)';
+   statusEl.style.color = 'var(--text-primary)';
+   statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando archivo...';
+   const reader = new FileReader();
+@@ -1480,7 +1480,7 @@ async function loadAgents() {
+       html += `<div><div style="font-weight:700; font-size:14px; color:var(--ccs-azul-oscuro);">${escapeHtml(agent.name || agentId)}</div>`;
+       html += `<div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${escapeHtml(agent.description || '')}</div></div>`;
+       html += `</div>`;
+-      html += `<span style="padding:3px 10px; background:rgba(61,174,43,0.1); color:var(--ccs-verde); border-radius:12px; font-size:10px; font-weight:600;">${escapeHtml(agent.role || 'agent')}</span>`;
++      html += `<span style="padding:3px 10px; background:rgba(0,213,58,0.1); color:var(--ccs-verde); border-radius:12px; font-size:10px; font-weight:600;">${escapeHtml(agent.role || 'agent')}</span>`;
+       html += `</div>`;
+ 
+       // Model & Temperature
+@@ -1505,7 +1505,7 @@ async function loadAgents() {
+         html += `<div><label style="margin-bottom:8px; display:block; font-size:11px; font-weight:600;">Skills (${skills.length})</label>`;
+         html += `<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">`;
+         for (const sname of skills) {
+-          html += `<button class="btn btn-sm" style="background:rgba(23,58,122,0.08); color:var(--ccs-azul); border:1px solid rgba(23,58,122,0.2); font-size:10px;" onclick="toggleSkillEditor('${agentId}','${sname}')">&#9998; ${escapeHtml(sname)}</button>`;
++          html += `<button class="btn btn-sm" style="background:rgba(0,37,88,0.08); color:var(--ccs-azul); border:1px solid rgba(0,37,88,0.2); font-size:10px;" onclick="toggleSkillEditor('${agentId}','${sname}')">&#9998; ${escapeHtml(sname)}</button>`;
+         }
+         html += `</div>`;
+ 
+@@ -1659,7 +1659,7 @@ async function loadTokenStats() {
+           datasets: [{
+             label: 'Tokens usados',
+             data: agentTokens,
+-            backgroundColor: ['#173A7A', '#F4C10E', '#CE1126', '#2E6FC0', '#3DAE2B', '#8B5CF6'],
++            backgroundColor: ['#002558', '#00D53A', '#3A89DA', '#3A89DA', '#00D53A', '#8B5CF6'],
+           }]
+         },
+         options: {
+diff --git a/app/index.html b/app/index.html
+index 7025e1c..bb23ad0 100644
+--- a/app/index.html
++++ b/app/index.html
+@@ -19,31 +19,32 @@
+     /* ===== RESET & VARIABLES CCS ===== */
+     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+     :root {
+-      --ccs-azul-oscuro: #173A7A;
+-      --ccs-verde: #3DAE2B;
+-      --ccs-azul: #1E56A8;
+-      --ccs-celeste: #2E6FC0;
+-      --ccs-verde-brillante: #0DD700;
+-      --ccs-rojo: #CE1126;
+-      --ccs-dorado: #F4C10E;
++      --ccs-azul-oscuro: #002558;
++      --ccs-verde: #00D53A;
++      --ccs-azul: #3A89DA;
++      --ccs-celeste: #3A89DA;
++      --ccs-verde-brillante: #00D53A;
++      --ccs-rojo: #3A89DA;
++      --ccs-dorado: #00D53A;
++      --ccs-gradient: linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%);
+       --bg-base: #F7F8FA;
+       --bg-card: #FFFFFF;
+       --bg-hover: #EEF2F8;
+-      --primary: #173A7A;
+-      --primary-h: #1E56A8;
+-      --accent: #2E6FC0;
+-      --success: #3DAE2B;
+-      --success-h: #0DD700;
+-      --warning: #f59e0b;
++      --primary: #002558;
++      --primary-h: #3A89DA;
++      --accent: #3A89DA;
++      --success: #00D53A;
++      --success-h: #00D53A;
++      --warning: #3A89DA;
+       --danger: #dc2626;
+       --text-main: #1A2340;
+       --text-muted: #6B7A99;
+       --border: #D6DFF0;
+-      --border-focus: #1E56A8;
++      --border-focus: #3A89DA;
+       --radius: 10px;
+       --sidebar-w: 252px;
+-      --shadow-sm: 0 1px 3px rgba(23,58,122,0.08);
+-      --shadow-md: 0 4px 12px rgba(23,58,122,0.10);
++      --shadow-sm: 0 1px 3px rgba(0,37,88,0.08);
++      --shadow-md: 0 4px 12px rgba(0,37,88,0.10);
+     }
+     body {
+       font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+@@ -93,8 +94,8 @@
+       color: var(--text-muted); font-size: 13px; font-weight: 500; cursor: pointer;
+       transition: all 0.15s; margin-bottom: 2px;
+     }
+-    .nav-item:hover { background: rgba(244,193,14,0.14); color: var(--ccs-azul-oscuro); }
+-    .nav-item.active { background: linear-gradient(135deg, var(--ccs-dorado), #E0A800); color: var(--ccs-azul-oscuro); font-weight: 700; box-shadow: inset 3px 0 0 var(--ccs-rojo), 0 2px 8px rgba(244,193,14,0.35); }
++    .nav-item:hover { background: rgba(0,213,58,0.14); color: var(--ccs-azul-oscuro); }
++    .nav-item.active { background: var(--ccs-gradient); color: #fff; font-weight: 700; box-shadow: inset 3px 0 0 var(--ccs-azul-oscuro), 0 2px 8px rgba(0,213,58,0.35); }
+     .nav-item.active .nav-icon { color: var(--ccs-rojo); }
+     .nav-item .nav-icon { width: 18px; text-align: center; font-size: 14px; }
+     .nav-badge { margin-left: auto; background: var(--ccs-rojo); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 20px; }
+@@ -135,16 +136,16 @@
+ 
+     /* ===== BUTTONS ===== */
+     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600; transition: all 0.18s; letter-spacing: 0.01em; }
+-    .btn-primary { background: linear-gradient(135deg, var(--ccs-dorado), #E0A800); color: var(--ccs-azul-oscuro); box-shadow: 0 2px 6px rgba(244,193,14,0.35); border-bottom: 2px solid var(--ccs-azul-oscuro); }
+-    .btn-primary:hover { background: linear-gradient(135deg, #FFD23A, var(--ccs-dorado)); box-shadow: 0 4px 12px rgba(244,193,14,0.45); transform: translateY(-1px); }
++    .btn-primary { background: var(--ccs-gradient); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.35); border-bottom: 2px solid var(--ccs-azul-oscuro); }
++    .btn-primary:hover { background: var(--ccs-gradient); box-shadow: 0 4px 12px rgba(0,213,58,0.45); transform: translateY(-1px); }
+     .btn-secondary { background: #FFFFFF; color: var(--ccs-azul-oscuro); border: 1.5px solid var(--border); }
+     .btn-secondary:hover { background: var(--bg-hover); border-color: var(--ccs-celeste); color: var(--ccs-azul); }
+-    .btn-success { background: linear-gradient(135deg, var(--ccs-verde), var(--ccs-verde-brillante)); color: #fff; box-shadow: 0 2px 6px rgba(61,174,43,0.25); }
++    .btn-success { background: linear-gradient(135deg, var(--ccs-verde), var(--ccs-verde-brillante)); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.25); }
+     .btn-success:hover { filter: brightness(1.08); transform: translateY(-1px); }
+     .btn-danger { background: var(--danger); color: #fff; }
+-    .btn-accent { background: linear-gradient(135deg, var(--ccs-dorado), #E0A800); color: var(--ccs-azul-oscuro); box-shadow: 0 2px 6px rgba(244,193,14,0.35); }
++    .btn-accent { background: var(--ccs-gradient); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.35); }
+     .btn-accent:hover { filter: brightness(1.05); transform: translateY(-1px); }
+-    .btn-gold { background: linear-gradient(135deg, var(--ccs-dorado), #E0A800); color: var(--ccs-azul-oscuro); box-shadow: 0 2px 6px rgba(244,193,14,0.35); }
++    .btn-gold { background: var(--ccs-gradient); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.35); }
+     .btn-gold:hover { filter: brightness(1.05); transform: translateY(-1px); }
+     .btn-sm { padding: 5px 12px; font-size: 12px; }
+     .btn-lg { padding: 12px 28px; font-size: 15px; }
+@@ -174,10 +175,10 @@
+       padding: 16px; cursor: pointer; transition: all 0.18s; box-shadow: var(--shadow-sm);
+     }
+     .company-card:hover { border-color: var(--ccs-azul); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+-    .company-card.selected { border-color: var(--ccs-azul-oscuro); background: rgba(23,58,122,0.04); box-shadow: 0 0 0 2px rgba(23,58,122,0.15); }
++    .company-card.selected { border-color: var(--ccs-azul-oscuro); background: rgba(0,37,88,0.04); box-shadow: 0 0 0 2px rgba(0,37,88,0.15); }
+     .company-avatar {
+       width: 48px; height: 48px; border-radius: 12px;
+-      background: linear-gradient(135deg, var(--ccs-dorado), var(--ccs-rojo));
++      background: var(--ccs-gradient);
+       display: flex; align-items: center; justify-content: center;
+       font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 10px;
+       border: 2px solid var(--ccs-azul-oscuro);
+@@ -186,8 +187,8 @@
+     .company-sector { font-size: 11px; color: var(--text-muted); }
+     .company-status { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: 8px; }
+     .status-pending { background: rgba(245,158,11,0.12); color: #b45309; }
+-    .status-interviewing { background: rgba(23,58,122,0.12); color: var(--ccs-azul-oscuro); }
+-    .status-complete { background: rgba(61,174,43,0.12); color: #166534; }
++    .status-interviewing { background: rgba(0,37,88,0.12); color: var(--ccs-azul-oscuro); }
++    .status-complete { background: rgba(0,213,58,0.12); color: #166534; }
+ 
+     /* ===== FORMS ===== */
+     .form-group { margin-bottom: 16px; }
+@@ -197,7 +198,7 @@
+     /* ===== MODAL ===== */
+     .modal-overlay { position: fixed; inset: 0; background: rgba(13,29,66,0.45); backdrop-filter: blur(3px); z-index: 200; display: none; align-items: center; justify-content: center; }
+     .modal-overlay.open { display: flex; }
+-    .modal { background: #FFFFFF; border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 560px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(23,58,122,0.18); }
++    .modal { background: #FFFFFF; border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 560px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,37,88,0.18); }
+     .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px 16px 28px; border-bottom: 2px solid var(--border); }
+     .modal-body { overflow-y: auto; padding: 20px 28px 28px 28px; flex: 1; }
+     .modal-title { font-size: 17px; font-weight: 700; color: var(--ccs-azul-oscuro); }
+@@ -208,16 +209,16 @@
+     .chat-container { display: flex; flex-direction: column; height: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+     .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+     .chat-message { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+-    .chat-message.user { background: linear-gradient(135deg, var(--ccs-dorado), #E0A800); color: var(--ccs-azul-oscuro); font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
++    .chat-message.user { background: var(--ccs-gradient); color: #fff; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
+     .chat-message.assistant { background: #FFFFFF; border: 1px solid var(--border); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: var(--shadow-sm); }
+-    .chat-message.system-msg { background: rgba(46,111,192,0.08); border: 1px solid rgba(46,111,192,0.25); color: var(--ccs-azul); align-self: center; text-align: center; font-size: 12px; max-width: 90%; }
++    .chat-message.system-msg { background: rgba(58,137,218,0.08); border: 1px solid rgba(58,137,218,0.25); color: var(--ccs-azul); align-self: center; text-align: center; font-size: 12px; max-width: 90%; }
+     .chat-input-area { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--border); background: #FFFFFF; }
+     .chat-input { flex: 1; resize: none; min-height: 44px; max-height: 120px; font-size: 13px; padding: 10px 12px; line-height: 1.4; }
+ 
+     /* ===== PROGRESS ===== */
+     .progress-bar { height: 8px; background: var(--bg-hover); border-radius: 4px; overflow: hidden; }
+-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--ccs-dorado), var(--ccs-rojo)); border-radius: 4px; transition: width 0.5s ease; }
+-    .notification-item { padding: 8px 12px; background: rgba(46,111,192,0.06); border: 1px solid rgba(46,111,192,0.15); border-radius: 8px; font-size: 12px; margin-bottom: 6px; animation: slideIn 0.3s ease; color: var(--text-main); }
++    .progress-fill { height: 100%; background: var(--ccs-gradient); border-radius: 4px; transition: width 0.5s ease; }
++    .notification-item { padding: 8px 12px; background: rgba(58,137,218,0.06); border: 1px solid rgba(58,137,218,0.15); border-radius: 8px; font-size: 12px; margin-bottom: 6px; animation: slideIn 0.3s ease; color: var(--text-main); }
+     @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+ 
+     /* ===== NOTIFICATIONS ===== */
+@@ -228,7 +229,7 @@
+     .notification.info { border-left: 4px solid var(--ccs-azul); }
+ 
+     /* ===== LOADING ===== */
+-    .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(244,193,14,0.25); border-top-color: var(--ccs-dorado); border-radius: 50%; animation: spin 0.8s linear infinite; }
++    .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,213,58,0.25); border-top-color: var(--ccs-dorado); border-radius: 50%; animation: spin 0.8s linear infinite; }
+     @keyframes spin { to { transform: rotate(360deg); } }
+ 
+     /* ===== EMPTY STATES ===== */
+@@ -239,7 +240,7 @@
+ 
+     /* ===== READINESS BANNER ===== */
+     .readiness-banner { padding: 14px 20px; border-radius: var(--radius); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; animation: fadeIn 0.4s ease; }
+-    .readiness-banner.ready { background: linear-gradient(135deg, rgba(61,174,43,0.08), rgba(13,215,0,0.06)); border: 1px solid rgba(61,174,43,0.3); color: #1a7a12; }
++    .readiness-banner.ready { background: linear-gradient(135deg, rgba(0,213,58,0.08), rgba(0,213,58,0.06)); border: 1px solid rgba(0,213,58,0.3); color: #1a7a12; }
+     .readiness-banner.not-ready { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04)); border: 1px solid rgba(245,158,11,0.3); color: #92400e; }
+     @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+ 
+@@ -253,7 +254,7 @@
+     .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+     .data-table th { background: var(--bg-hover); color: var(--text-muted); padding: 8px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border-radius: 4px; }
+     .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+-    .data-table tr:hover { background: rgba(46,111,192,0.03); }
++    .data-table tr:hover { background: rgba(58,137,218,0.03); }
+     .positive { color: var(--ccs-verde); font-weight: 600; }
+     .negative { color: var(--danger); font-weight: 600; }
+ 
+@@ -272,15 +273,15 @@
+     .global-loading-content .loading-sublabel { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+ 
+     /* ===== INTERVIEW TOPICS ===== */
+-    .topic-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(46,111,192,0.04); border: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
+-    .topic-item.covered { background: rgba(61,174,43,0.06); border-color: rgba(61,174,43,0.3); color: #166534; }
++    .topic-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(58,137,218,0.04); border: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
++    .topic-item.covered { background: rgba(0,213,58,0.06); border-color: rgba(0,213,58,0.3); color: #166534; }
+     .topic-item .topic-icon { width: 16px; text-align: center; font-size: 11px; }
+ 
+     /* ===== SCROLLBAR ===== */
+     ::-webkit-scrollbar { width: 6px; height: 6px; }
+     ::-webkit-scrollbar-track { background: transparent; }
+-    ::-webkit-scrollbar-thumb { background: rgba(23,58,122,0.2); border-radius: 3px; }
+-    ::-webkit-scrollbar-thumb:hover { background: rgba(23,58,122,0.35); }
++    ::-webkit-scrollbar-thumb { background: rgba(0,37,88,0.2); border-radius: 3px; }
++    ::-webkit-scrollbar-thumb:hover { background: rgba(0,37,88,0.35); }
+ 
+     /* ===== RESPONSIVE ===== */
+     @media (max-width: 1024px) { .grid-4 { grid-template-columns: 1fr 1fr; } }
+@@ -307,7 +308,7 @@
+ 
+     /* ===== ONBOARDING HERO ===== */
+     .welcome-hero { text-align: center; padding: 40px 20px; max-width: 600px; margin: 0 auto 32px; }
+-    .welcome-icon { font-size: 56px; color: var(--ccs-dorado); margin-bottom: 16px; text-shadow: 0 2px 4px rgba(23,58,122,0.15); }
++    .welcome-icon { font-size: 56px; color: var(--ccs-dorado); margin-bottom: 16px; text-shadow: 0 2px 4px rgba(0,37,88,0.15); }
+     .welcome-title { font-size: 24px; font-weight: 800; color: var(--ccs-azul-oscuro); margin-bottom: 8px; }
+     .welcome-title::after { content: ""; display: block; width: 64px; height: 4px; margin: 10px auto 0; border-radius: 4px; background: linear-gradient(90deg, var(--ccs-azul-oscuro), var(--ccs-rojo), var(--ccs-dorado)); }
+     .welcome-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+diff --git a/desktop/brand/ccs-theme.css b/desktop/brand/ccs-theme.css
+index 1fdd56b..23483ed 100644
+--- a/desktop/brand/ccs-theme.css
++++ b/desktop/brand/ccs-theme.css
+@@ -3,7 +3,7 @@
+  * (SmartCaja, SmartRedes, SmartGastos, …)
+  *
+  * Identidad de la Cámara de Comercio de Santiago (CCS),
+- * basada en los colores de la bandera colombiana: azul marino, dorado y rojo.
++ * con azul, verde y celeste institucionales.
+  *
+  * Uso: enlazar en el <head> de la app y usar las variables --ccs-*.
+  *   <link rel="stylesheet" href="brand/ccs-theme.css" />
+@@ -15,17 +15,18 @@
+ 
+ :root {
+   /* Paleta base CCS */
+-  --ccs-azul-oscuro: #173A7A;   /* primario / estructura / texto */
+-  --ccs-azul:        #1E56A8;
+-  --ccs-celeste:     #2E6FC0;
+-  --ccs-rojo:        #CE1126;   /* acento fuerte (bandera) */
+-  --ccs-dorado:      #F4C10E;   /* acento dominante (bandera) */
+-  --ccs-verde:       #3DAE2B;   /* semántico: positivo/éxito */
+-  --ccs-verde-brillante: #0DD700;
++  --ccs-azul-oscuro: #002558;   /* primario / estructura / texto */
++  --ccs-azul:        #3A89DA;
++  --ccs-celeste:     #3A89DA;
++  --ccs-rojo:        #3A89DA;   /* acento secundario */
++  --ccs-dorado:      #00D53A;   /* acento dominante */
++  --ccs-verde:       #00D53A;   /* semántico: positivo/éxito */
++  --ccs-verde-brillante: #00D53A;
++  --ccs-gradient: linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%);
+ 
+-  /* Color de acento por-herramienta (por defecto: dorado CCS) */
++  /* Color de acento por-herramienta (por defecto: verde CCS) */
+   --ccs-accent:      var(--ccs-dorado);
+-  --ccs-accent-strong: #E0A800;
++  --ccs-accent-strong: #3A89DA;
+ 
+   /* Neutros / superficies */
+   --bg-base:   #F7F8FA;
+@@ -39,34 +40,28 @@
+   --primary:   var(--ccs-azul-oscuro);
+   --primary-h: var(--ccs-azul);
+   --success:   var(--ccs-verde);
+-  --warning:   #f59e0b;
++  --warning:   #3A89DA;
+   --danger:    #dc2626;
+ 
+   --radius: 10px;
+-  --shadow-sm: 0 1px 3px rgba(23,58,122,0.08);
+-  --shadow-md: 0 4px 12px rgba(23,58,122,0.10);
++  --shadow-sm: 0 1px 3px rgba(0,37,88,0.08);
++  --shadow-md: 0 4px 12px rgba(0,37,88,0.10);
+ }
+ 
+ /* Barra tricolor de marca (topbar / bajo el logo). Aplicar con la clase. */
+ .ccs-tricolor-top {
+   border-top: 3px solid transparent;
+-  border-image: linear-gradient(90deg,
+-      var(--ccs-azul-oscuro) 0 40%,
+-      var(--ccs-rojo) 40% 70%,
+-      var(--ccs-accent) 70% 100%) 1;
++  border-image: var(--ccs-gradient) 1;
+ }
+ .ccs-tricolor-bottom {
+   border-bottom: 3px solid transparent;
+-  border-image: linear-gradient(90deg,
+-      var(--ccs-azul-oscuro) 0 33%,
+-      var(--ccs-rojo) 33% 66%,
+-      var(--ccs-accent) 66% 100%) 1;
++  border-image: var(--ccs-gradient) 1;
+ }
+ 
+-/* Botón primario dorado (dominante) con texto azul marino. */
++/* Botón primario CCS con texto blanco. */
+ .ccs-btn-primary {
+-  background: linear-gradient(135deg, var(--ccs-accent), var(--ccs-accent-strong));
+-  color: var(--ccs-azul-oscuro);
++  background: var(--ccs-gradient);
++  color: #fff;
+   border: 0;
+   border-bottom: 2px solid var(--ccs-azul-oscuro);
+   border-radius: var(--radius);
+@@ -81,5 +76,5 @@
+   display: block;
+   width: 64px; height: 4px; margin: 10px auto 0;
+   border-radius: 4px;
+-  background: linear-gradient(90deg, var(--ccs-azul-oscuro), var(--ccs-rojo), var(--ccs-accent));
++  background: var(--ccs-gradient);
+ }
+diff --git a/desktop/scripts/configure.mjs b/desktop/scripts/configure.mjs
+index 04268d2..7051f36 100644
+--- a/desktop/scripts/configure.mjs
++++ b/desktop/scripts/configure.mjs
+@@ -30,7 +30,7 @@ const publisher = cfg.publisher || "Cámara de Comercio de Santiago";
+ const version = cfg.version || "1.0.0";
+ const identifier = req("identifier");
+ const dataDirName = req("dataDirName");
+-const accent = cfg.accent || "#F4C10E";
++const accent = cfg.accent || "#00D53A";
+ 
+ /** Identificador Rust/npm estable (co.org.ccs.smartgastos → smartgastos). */
+ function cargoPackageName() {
+diff --git a/desktop/smartsuite.config.json b/desktop/smartsuite.config.json
+index 8dfa470..b3f36aa 100644
+--- a/desktop/smartsuite.config.json
++++ b/desktop/smartsuite.config.json
+@@ -4,7 +4,7 @@
+   "identifier": "cl.ccs.smartcaja",
+   "version": "2.0.0",
+   "dataDirName": "SmartCaja",
+-  "accent": "#F4C10E",
++  "accent": "#00D53A",
+   "window": {
+     "title": "SmartCaja",
+     "width": 1280,
+diff --git a/desktop/src-tauri/src/main.rs b/desktop/src-tauri/src/main.rs
+index c3b4e5a..60d7be2 100644
+--- a/desktop/src-tauri/src/main.rs
++++ b/desktop/src-tauri/src/main.rs
+@@ -1,10 +1,14 @@
+ // App de escritorio nativa SmartSuite (Tauri v2)
+-#![cfg_attr(all(not(debug_assertions), target_os = "windows"), windows_subsystem = "windows")]
++#![cfg_attr(
++    all(not(debug_assertions), target_os = "windows"),
++    windows_subsystem = "windows"
++)]
+ 
+ use std::io::{BufRead, Write};
+ use std::net::{TcpListener, TcpStream};
+ use std::path::PathBuf;
+-use std::process::{Command, Stdio};
++use std::process::{Child, Command, Stdio};
++use std::sync::atomic::{AtomicBool, Ordering};
+ use std::sync::{Mutex, OnceLock};
+ use std::time::Duration;
+ 
+@@ -43,6 +47,12 @@ fn app_config() -> &'static AppConfig {
+ }
+ 
+ struct BackendState(Mutex<Option<CommandChild>>);
++struct OllamaChild {
++    pid: u32,
++    child: Child,
++}
++struct OllamaState(Mutex<Option<OllamaChild>>);
++struct ShutdownState(AtomicBool);
+ struct Navigated(Mutex<bool>);
+ struct LastProbe(Mutex<String>);
+ 
+@@ -192,8 +202,9 @@ fn backend_log(line: &str) {
+     ollama_log(line);
+ }
+ 
+-fn kill_backend_child(state: &BackendState) {
+-    if let Some(child) = state.0.lock().unwrap().take() {
++fn kill_backend_child(app: &tauri::AppHandle) {
++    let backend_state = app.state::<BackendState>();
++    if let Some(child) = backend_state.0.lock().unwrap().take() {
+         ollama_log("kill_backend_child: terminando sidecar backend");
+         match child.kill() {
+             Ok(()) => ollama_log("kill_backend_child: OK"),
+@@ -202,9 +213,49 @@ fn kill_backend_child(state: &BackendState) {
+     }
+ }
+ 
++fn kill_ollama_child(app: &tauri::AppHandle) {
++    let ollama_state = app.state::<OllamaState>();
++    if let Some(mut ollama) = ollama_state.0.lock().unwrap().take() {
++        ollama_log(&format!(
++            "kill_ollama_child: terminando Ollama iniciado por SmartCaja (pid {})",
++            ollama.pid
++        ));
++        match ollama.child.kill() {
++            Ok(()) => {
++                for _ in 0..10 {
++                    match ollama.child.try_wait() {
++                        Ok(Some(_)) => {
++                            ollama_log("kill_ollama_child: OK");
++                            return;
++                        }
++                        Ok(None) => std::thread::sleep(Duration::from_millis(100)),
++                        Err(e) => {
++                            ollama_log(&format!("kill_ollama_child: {}", e));
++                            return;
++                        }
++                    }
++                }
++                ollama_log("kill_ollama_child: espera agotada");
++            }
++            Err(e) => ollama_log(&format!("kill_ollama_child: {}", e)),
++        }
++    }
++}
++
+ fn shutdown_app(app: &tauri::AppHandle, reason: &str) {
+     ollama_log(&format!("shutdown_app: {}", reason));
+-    kill_backend_child(&*app.state::<BackendState>());
++    kill_backend_child(app);
++    std::thread::sleep(Duration::from_millis(200));
++    kill_ollama_child(app);
++}
++
++fn shutdown_and_exit(app: &tauri::AppHandle, reason: &str) {
++    let shutdown_state = app.state::<ShutdownState>();
++    if shutdown_state.0.swap(true, Ordering::SeqCst) {
++        return;
++    }
++    shutdown_app(app, reason);
++    app.exit(0);
+ }
+ 
+ fn pick_port() -> u16 {
+@@ -314,10 +365,12 @@ fn probe_backend(port: u16) -> ProbeResult {
+         if r.status() == 200 {
+             if let Ok(body) = r.into_string() {
+                 ollama_log(&format!("/api/desktop-ui: {}", body));
+-                if body.contains("\"indexExists\":false") || body.contains("\"indexExists\": false") {
++                if body.contains("\"indexExists\":false") || body.contains("\"indexExists\": false")
++                {
+                     return ProbeResult {
+                         ok: false,
+-                        detail: "sidecar sin app/index.html empaquetado (rebuild PyInstaller)".into(),
++                        detail: "sidecar sin app/index.html empaquetado (rebuild PyInstaller)"
++                            .into(),
+                     };
+                 }
+             }
+@@ -337,11 +390,7 @@ fn probe_backend(port: u16) -> ProbeResult {
+             } else {
+                 ProbeResult {
+                     ok: false,
+-                    detail: format!(
+-                        "GET / status {} (no HTML). head={:?}",
+-                        status,
+-                        snippet
+-                    ),
++                    detail: format!("GET / status {} (no HTML). head={:?}", status, snippet),
+                 }
+             }
+         }
+@@ -398,8 +447,7 @@ fn navigate_main_to_backend(app: &tauri::AppHandle, port: u16) -> Result<(), Str
+     *app.state::<LastProbe>().0.lock().unwrap() = probe.detail.clone();
+     ollama_log(&format!(
+         "navigate_main_to_backend probe: ok={} {}",
+-        probe.ok,
+-        probe.detail
++        probe.ok, probe.detail
+     ));
+     if !probe.ok {
+         update_status(app, |s| {
+@@ -534,7 +582,15 @@ fn bootstrap_ollama(app: tauri::AppHandle, backend_port: u16) {
+         if TcpStream::connect(("127.0.0.1", 11434)).is_err() {
+             let mut cmd = ollama_command();
+             cmd.arg("serve").stdout(Stdio::null()).stderr(Stdio::null());
+-            let _ = cmd.spawn();
++            match cmd.spawn() {
++                Ok(child) => {
++                    let pid = child.id();
++                    let ollama_state = app.state::<OllamaState>();
++                    *ollama_state.0.lock().unwrap() = Some(OllamaChild { pid, child });
++                    ollama_log(&format!("Ollama iniciado por SmartCaja (pid {})", pid));
++                }
++                Err(e) => ollama_log(&format!("No se pudo iniciar Ollama: {}", e)),
++            }
+             wait_for_port(11434, 30);
+         }
+ 
+@@ -559,6 +615,8 @@ fn main() {
+     tauri::Builder::default()
+         .plugin(tauri_plugin_shell::init())
+         .manage(BackendState(Mutex::new(None)))
++        .manage(OllamaState(Mutex::new(None)))
++        .manage(ShutdownState(AtomicBool::new(false)))
+         .manage(AppStatus(Mutex::new(Status::initial())))
+         .manage(Navigated(Mutex::new(false)))
+         .manage(LastProbe(Mutex::new(String::new())))
+@@ -577,18 +635,17 @@ fn main() {
+                 w.on_window_event(move |event| {
+                     match event {
+                         WindowEvent::CloseRequested { .. } => {
+-                            shutdown_app(&app_for_window, "ventana main CloseRequested");
++                            shutdown_and_exit(&app_for_window, "ventana main CloseRequested");
+                         }
+                         WindowEvent::Destroyed => {
+-                            shutdown_app(&app_for_window, "ventana main Destroyed");
+-                            app_for_window.exit(0);
++                            shutdown_and_exit(&app_for_window, "ventana main Destroyed");
+                         }
+                         _ => {}
+                     }
+                 });
+             }
+ 
+-            kill_backend_child(&*app.state::<BackendState>());
++            kill_backend_child(&handle);
+             let port = pick_port();
+             app.manage(BackendPort(port));
+             ollama_log(&format!("Puerto backend elegido: {}", port));
+@@ -625,7 +682,7 @@ fn main() {
+                                 }
+                             }
+                             ollama_log("sidecar backend: canal de eventos cerrado (proceso terminó?)");
+-                            shutdown_app(&sidecar_handle, "sidecar stdout/stderr EOF");
++                            shutdown_and_exit(&sidecar_handle, "sidecar stdout/stderr EOF");
+                         });
+                     }
+                     Err(e) => {
+@@ -683,18 +740,17 @@ fn main() {
+         .run(|app_handle, event| {
+             match event {
+                 RunEvent::ExitRequested { .. } => {
+-                    shutdown_app(app_handle, "RunEvent::ExitRequested");
++                    shutdown_and_exit(app_handle, "RunEvent::ExitRequested");
+                 }
+                 RunEvent::Exit => {
+-                    shutdown_app(app_handle, "RunEvent::Exit");
++                    shutdown_and_exit(app_handle, "RunEvent::Exit");
+                 }
+                 RunEvent::WindowEvent { label, event, .. } if label == "main" => {
+                     if matches!(event, WindowEvent::CloseRequested { .. }) {
+-                        shutdown_app(app_handle, "RunEvent::WindowEvent CloseRequested");
++                        shutdown_and_exit(app_handle, "RunEvent::WindowEvent CloseRequested");
+                     }
+                     if matches!(event, WindowEvent::Destroyed) {
+-                        shutdown_app(app_handle, "RunEvent::WindowEvent Destroyed");
+-                        app_handle.exit(0);
++                        shutdown_and_exit(app_handle, "RunEvent::WindowEvent Destroyed");
+                     }
+                 }
+                 _ => {}
+diff --git a/desktop/ui/accent.css b/desktop/ui/accent.css
+index aba809b..192f86e 100644
+--- a/desktop/ui/accent.css
++++ b/desktop/ui/accent.css
+@@ -1,2 +1,2 @@
+ /* Generado por configure.mjs — acento por-herramienta */
+-:root { --ccs-accent: #F4C10E; }
++:root { --ccs-accent: #00D53A; }
+diff --git a/desktop/ui/ccs-theme.css b/desktop/ui/ccs-theme.css
+index 1fdd56b..23483ed 100644
+--- a/desktop/ui/ccs-theme.css
++++ b/desktop/ui/ccs-theme.css
+@@ -3,7 +3,7 @@
+  * (SmartCaja, SmartRedes, SmartGastos, …)
+  *
+  * Identidad de la Cámara de Comercio de Santiago (CCS),
+- * basada en los colores de la bandera colombiana: azul marino, dorado y rojo.
++ * con azul, verde y celeste institucionales.
+  *
+  * Uso: enlazar en el <head> de la app y usar las variables --ccs-*.
+  *   <link rel="stylesheet" href="brand/ccs-theme.css" />
+@@ -15,17 +15,18 @@
+ 
+ :root {
+   /* Paleta base CCS */
+-  --ccs-azul-oscuro: #173A7A;   /* primario / estructura / texto */
+-  --ccs-azul:        #1E56A8;
+-  --ccs-celeste:     #2E6FC0;
+-  --ccs-rojo:        #CE1126;   /* acento fuerte (bandera) */
+-  --ccs-dorado:      #F4C10E;   /* acento dominante (bandera) */
+-  --ccs-verde:       #3DAE2B;   /* semántico: positivo/éxito */
+-  --ccs-verde-brillante: #0DD700;
++  --ccs-azul-oscuro: #002558;   /* primario / estructura / texto */
++  --ccs-azul:        #3A89DA;
++  --ccs-celeste:     #3A89DA;
++  --ccs-rojo:        #3A89DA;   /* acento secundario */
++  --ccs-dorado:      #00D53A;   /* acento dominante */
++  --ccs-verde:       #00D53A;   /* semántico: positivo/éxito */
++  --ccs-verde-brillante: #00D53A;
++  --ccs-gradient: linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%);
+ 
+-  /* Color de acento por-herramienta (por defecto: dorado CCS) */
++  /* Color de acento por-herramienta (por defecto: verde CCS) */
+   --ccs-accent:      var(--ccs-dorado);
+-  --ccs-accent-strong: #E0A800;
++  --ccs-accent-strong: #3A89DA;
+ 
+   /* Neutros / superficies */
+   --bg-base:   #F7F8FA;
+@@ -39,34 +40,28 @@
+   --primary:   var(--ccs-azul-oscuro);
+   --primary-h: var(--ccs-azul);
+   --success:   var(--ccs-verde);
+-  --warning:   #f59e0b;
++  --warning:   #3A89DA;
+   --danger:    #dc2626;
+ 
+   --radius: 10px;
+-  --shadow-sm: 0 1px 3px rgba(23,58,122,0.08);
+-  --shadow-md: 0 4px 12px rgba(23,58,122,0.10);
++  --shadow-sm: 0 1px 3px rgba(0,37,88,0.08);
++  --shadow-md: 0 4px 12px rgba(0,37,88,0.10);
+ }
+ 
+ /* Barra tricolor de marca (topbar / bajo el logo). Aplicar con la clase. */
+ .ccs-tricolor-top {
+   border-top: 3px solid transparent;
+-  border-image: linear-gradient(90deg,
+-      var(--ccs-azul-oscuro) 0 40%,
+-      var(--ccs-rojo) 40% 70%,
+-      var(--ccs-accent) 70% 100%) 1;
++  border-image: var(--ccs-gradient) 1;
+ }
+ .ccs-tricolor-bottom {
+   border-bottom: 3px solid transparent;
+-  border-image: linear-gradient(90deg,
+-      var(--ccs-azul-oscuro) 0 33%,
+-      var(--ccs-rojo) 33% 66%,
+-      var(--ccs-accent) 66% 100%) 1;
++  border-image: var(--ccs-gradient) 1;
+ }
+ 
+-/* Botón primario dorado (dominante) con texto azul marino. */
++/* Botón primario CCS con texto blanco. */
+ .ccs-btn-primary {
+-  background: linear-gradient(135deg, var(--ccs-accent), var(--ccs-accent-strong));
+-  color: var(--ccs-azul-oscuro);
++  background: var(--ccs-gradient);
++  color: #fff;
+   border: 0;
+   border-bottom: 2px solid var(--ccs-azul-oscuro);
+   border-radius: var(--radius);
+@@ -81,5 +76,5 @@
+   display: block;
+   width: 64px; height: 4px; margin: 10px auto 0;
+   border-radius: 4px;
+-  background: linear-gradient(90deg, var(--ccs-azul-oscuro), var(--ccs-rojo), var(--ccs-accent));
++  background: var(--ccs-gradient);
+ }
+diff --git a/desktop/ui/index.html b/desktop/ui/index.html
+index d95c87b..2fb58fd 100644
+--- a/desktop/ui/index.html
++++ b/desktop/ui/index.html
+@@ -3,7 +3,7 @@
+ 
+   En desktop Tauri: se sirve desde FastAPI en /__splash (mismo origen que la app).
+   Tras Ollama: location.replace('/') — sin WebviewWindow.navigate ni invoke.
+-  Marca: desktop/smartsuite.config.json (SmartCaja, accent #F4C10E).
++  Marca: desktop/smartsuite.config.json (SmartCaja, accent #00D53A).
+ -->
+ <!DOCTYPE html>
+ <html lang="es">
+@@ -14,28 +14,28 @@
+   <link rel="stylesheet" href="ccs-theme.css" />
+   <link rel="stylesheet" href="accent.css" />
+   <style>
+-    :root { --navy: var(--ccs-azul-oscuro); --gold: var(--ccs-accent); --red: var(--ccs-rojo); }
++    :root { --navy: var(--ccs-azul-oscuro); --accent: var(--ccs-accent); --gradient: linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%); }
+     * { box-sizing: border-box; margin: 0; padding: 0; }
+     html, body { height: 100%; }
+     body {
+       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+-      background: radial-gradient(circle at 50% 30%, #1e4a94 0%, #0f2a5a 100%);
++      background: var(--gradient);
+       color: #fff; display: flex; flex-direction: column; align-items: center;
+       justify-content: center; height: 100vh; text-align: center; gap: 20px; padding: 24px;
+     }
+     .splash-logo { width: 72px; height: 72px; object-fit: contain; border-radius: 14px; }
+     .brand { font-size: 34px; font-weight: 800; letter-spacing: 0.5px; }
+-    .brand .accent { color: var(--gold); }
++    .brand .accent { color: var(--accent); }
+     .sub { color: #c7d3ec; font-size: 14px; max-width: 460px; line-height: 1.5; }
+     .track { width: 300px; max-width: 80vw; height: 8px; border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.15); position: relative; }
+-    .fill { height: 100%; width: 0%; border-radius: 8px; background: linear-gradient(90deg, var(--navy), var(--red), var(--gold)); transition: width 0.4s ease; }
++    .fill { height: 100%; width: 0%; border-radius: 8px; background: var(--gradient); transition: width 0.4s ease; }
+     .track.indeterminate .fill { width: 40% !important; position: absolute; left: -40%; animation: slide 1.2s infinite ease-in-out; }
+     @keyframes slide { 0% { left: -40%; } 100% { left: 100%; } }
+     .status { color: #dbe6ff; font-size: 13px; min-height: 18px; max-width: 460px; }
+-    .pct { color: var(--gold); font-weight: 700; font-size: 13px; min-height: 16px; }
++    .pct { color: var(--accent); font-weight: 700; font-size: 13px; min-height: 16px; }
+     .enter {
+       margin-top: 12px; padding: 14px 32px; border-radius: 12px; border: 0; cursor: pointer;
+-      background: linear-gradient(135deg, var(--gold), #E0A800); color: var(--navy);
++      background: var(--gradient); color: #fff;
+       font-weight: 800; font-size: 18px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+       box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+     }
+diff --git a/desktop/ui/splash.template.html b/desktop/ui/splash.template.html
+index 5c7446e..a91f258 100644
+--- a/desktop/ui/splash.template.html
++++ b/desktop/ui/splash.template.html
+@@ -3,7 +3,7 @@
+ 
+   En desktop Tauri: se sirve desde FastAPI en /__splash (mismo origen que la app).
+   Tras Ollama: location.replace('/') — sin WebviewWindow.navigate ni invoke.
+-  Marca: desktop/smartsuite.config.json (SmartCaja, accent #F4C10E).
++  Marca: desktop/smartsuite.config.json (SmartCaja, accent #00D53A).
+ -->
+ <!DOCTYPE html>
+ <html lang="es">
+@@ -14,28 +14,28 @@
+   <link rel="stylesheet" href="ccs-theme.css" />
+   <link rel="stylesheet" href="accent.css" />
+   <style>
+-    :root { --navy: var(--ccs-azul-oscuro); --gold: var(--ccs-accent); --red: var(--ccs-rojo); }
++    :root { --navy: var(--ccs-azul-oscuro); --accent: var(--ccs-accent); --gradient: linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%); }
+     * { box-sizing: border-box; margin: 0; padding: 0; }
+     html, body { height: 100%; }
+     body {
+       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+-      background: radial-gradient(circle at 50% 30%, #1e4a94 0%, #0f2a5a 100%);
++      background: var(--gradient);
+       color: #fff; display: flex; flex-direction: column; align-items: center;
+       justify-content: center; height: 100vh; text-align: center; gap: 20px; padding: 24px;
+     }
+     .splash-logo { width: 72px; height: 72px; object-fit: contain; border-radius: 14px; }
+     .brand { font-size: 34px; font-weight: 800; letter-spacing: 0.5px; }
+-    .brand .accent { color: var(--gold); }
++    .brand .accent { color: var(--accent); }
+     .sub { color: #c7d3ec; font-size: 14px; max-width: 460px; line-height: 1.5; }
+     .track { width: 300px; max-width: 80vw; height: 8px; border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.15); position: relative; }
+-    .fill { height: 100%; width: 0%; border-radius: 8px; background: linear-gradient(90deg, var(--navy), var(--red), var(--gold)); transition: width 0.4s ease; }
++    .fill { height: 100%; width: 0%; border-radius: 8px; background: var(--gradient); transition: width 0.4s ease; }
+     .track.indeterminate .fill { width: 40% !important; position: absolute; left: -40%; animation: slide 1.2s infinite ease-in-out; }
+     @keyframes slide { 0% { left: -40%; } 100% { left: 100%; } }
+     .status { color: #dbe6ff; font-size: 13px; min-height: 18px; max-width: 460px; }
+-    .pct { color: var(--gold); font-weight: 700; font-size: 13px; min-height: 16px; }
++    .pct { color: var(--accent); font-weight: 700; font-size: 13px; min-height: 16px; }
+     .enter {
+       margin-top: 12px; padding: 14px 32px; border-radius: 12px; border: 0; cursor: pointer;
+-      background: linear-gradient(135deg, var(--gold), #E0A800); color: var(--navy);
++      background: var(--gradient); color: #fff;
+       font-weight: 800; font-size: 18px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+       box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+     }
+diff --git a/install.json b/install.json
+index 6328f92..bf72dbc 100644
+--- a/install.json
++++ b/install.json
+@@ -4,7 +4,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:24px 20px 0'><div style='display:flex;align-items:center;gap:14px;margin-bottom:16px'><div style='width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#F4C10E,#E0A800);display:flex;align-items:center;justify-content:center;font-size:24px;color:#173A7A;flex-shrink:0'>$</div><div><h2 style='margin:0;font-size:20px;color:#e2e8f0'>SmartCaja</h2><p style='margin:4px 0 0;color:#94a3b8;font-size:13px'>Gesti&oacute;n de flujos de caja con IA local para PYMEs</p></div></div><div style='background:#1e293b;border-radius:8px;padding:14px 16px;margin-bottom:8px'><div style='display:flex;justify-content:space-between;margin-bottom:8px'><span style='color:#94a3b8;font-size:12px'>Plataforma</span><span style='color:#e2e8f0;font-size:12px;font-weight:600'>{{platform}}</span></div><div style='display:flex;justify-content:space-between;margin-bottom:8px'><span style='color:#94a3b8;font-size:12px'>RAM disponible</span><span style='color:#e2e8f0;font-size:12px;font-weight:600'>{{ram}} GB</span></div><div style='display:flex;justify-content:space-between'><span style='color:#94a3b8;font-size:12px'>Modelo de IA</span><span style='color:#173A7A;font-size:12px;font-weight:600'>{{ram < 6 ? 'llama3.2:1b (ligero)' : ram < 12 ? 'llama3.2:3b (est&aacute;ndar)' : 'llama3.1:8b (avanzado)'}}</span></div></div><p style='color:#64748b;font-size:11px;margin:12px 0 0;text-align:center'>La instalaci&oacute;n puede tomar entre 5 y 15 minutos seg&uacute;n tu conexi&oacute;n a internet.</p></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:24px 20px 0'><div style='display:flex;align-items:center;gap:14px;margin-bottom:16px'><div style='width:48px;height:48px;border-radius:12px;background:linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%);display:flex;align-items:center;justify-content:center;font-size:24px;color:#002558;flex-shrink:0'>$</div><div><h2 style='margin:0;font-size:20px;color:#e2e8f0'>SmartCaja</h2><p style='margin:4px 0 0;color:#94a3b8;font-size:13px'>Gesti&oacute;n de flujos de caja con IA local para PYMEs</p></div></div><div style='background:#1e293b;border-radius:8px;padding:14px 16px;margin-bottom:8px'><div style='display:flex;justify-content:space-between;margin-bottom:8px'><span style='color:#94a3b8;font-size:12px'>Plataforma</span><span style='color:#e2e8f0;font-size:12px;font-weight:600'>{{platform}}</span></div><div style='display:flex;justify-content:space-between;margin-bottom:8px'><span style='color:#94a3b8;font-size:12px'>RAM disponible</span><span style='color:#e2e8f0;font-size:12px;font-weight:600'>{{ram}} GB</span></div><div style='display:flex;justify-content:space-between'><span style='color:#94a3b8;font-size:12px'>Modelo de IA</span><span style='color:#002558;font-size:12px;font-weight:600'>{{ram < 6 ? 'llama3.2:1b (ligero)' : ram < 12 ? 'llama3.2:3b (est&aacute;ndar)' : 'llama3.1:8b (avanzado)'}}</span></div></div><p style='color:#64748b;font-size:11px;margin:12px 0 0;text-align:center'>La instalaci&oacute;n puede tomar entre 5 y 15 minutos seg&uacute;n tu conexi&oacute;n a internet.</p></div>"
+       }
+     },
+ 
+@@ -13,7 +13,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>1</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Verificando Ollama</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Motor de IA local</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:20%;height:100%;background:linear-gradient(90deg,#3b82f6,#60a5fa);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Buscando Ollama en el sistema...</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#3A89DA;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>1</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Verificando Ollama</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Motor de IA local</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:20%;height:100%;background:linear-gradient(90deg,#3A89DA,#00D53A);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Buscando Ollama en el sistema...</p></div></div>"
+       }
+     },
+     {
+@@ -33,7 +33,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Ollama verificado correctamente</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Ollama verificado correctamente</span></div></div>"
+       }
+     },
+ 
+@@ -42,7 +42,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>2</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Iniciando servicio Ollama</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Preparando motor de IA</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:30%;height:100%;background:linear-gradient(90deg,#8b5cf6,#a78bfa);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Verificando si Ollama ya est&aacute; en ejecuci&oacute;n...</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#3A89DA;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>2</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Iniciando servicio Ollama</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Preparando motor de IA</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:30%;height:100%;background:linear-gradient(90deg,#3A89DA,#00D53A);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Verificando si Ollama ya est&aacute; en ejecuci&oacute;n...</p></div></div>"
+       }
+     },
+     {
+@@ -62,7 +62,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Servicio Ollama listo</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Servicio Ollama listo</span></div></div>"
+       }
+     },
+ 
+@@ -71,7 +71,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>3</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Descargando modelo de IA</span><span style='color:#64748b;font-size:12px;margin-left:8px'>{{ram < 6 ? 'llama3.2:1b (~700 MB)' : ram < 12 ? 'llama3.2:3b (~2 GB)' : 'llama3.1:8b (~4.7 GB)'}}</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:45%;height:100%;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Descargando el modelo de lenguaje necesario. Esto puede tardar varios minutos seg&uacute;n tu conexi&oacute;n...</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#3A89DA;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>3</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Descargando modelo de IA</span><span style='color:#64748b;font-size:12px;margin-left:8px'>{{ram < 6 ? 'llama3.2:1b (~700 MB)' : ram < 12 ? 'llama3.2:3b (~2 GB)' : 'llama3.1:8b (~4.7 GB)'}}</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:45%;height:100%;background:linear-gradient(90deg,#3A89DA,#00D53A);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Descargando el modelo de lenguaje necesario. Esto puede tardar varios minutos seg&uacute;n tu conexi&oacute;n...</p></div></div>"
+       }
+     },
+     {
+@@ -91,7 +91,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Modelo de IA configurado</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Modelo de IA configurado</span></div></div>"
+       }
+     },
+ 
+@@ -100,7 +100,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#06b6d4;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>4</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Instalando dependencias Python</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Entorno virtual + librer&iacute;as</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:65%;height:100%;background:linear-gradient(90deg,#06b6d4,#22d3ee);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Creando entorno virtual aislado e instalando FastAPI, Uvicorn y otras dependencias. Este paso puede tardar varios minutos...</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#3A89DA;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>4</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Instalando dependencias Python</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Entorno virtual + librer&iacute;as</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:65%;height:100%;background:linear-gradient(90deg,#3A89DA,#00D53A);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Creando entorno virtual aislado e instalando FastAPI, Uvicorn y otras dependencias. Este paso puede tardar varios minutos...</p></div></div>"
+       }
+     },
+     {
+@@ -120,7 +120,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Entorno Python configurado correctamente</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Entorno Python configurado correctamente</span></div></div>"
+       }
+     },
+ 
+@@ -129,7 +129,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#ec4899;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>5</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Inicializando datos</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Estructura de archivos y agentes</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:85%;height:100%;background:linear-gradient(90deg,#ec4899,#f472b6);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Creando directorios de datos, copiando configuraci&oacute;n de agentes y prompts del sistema...</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:16px 20px 0'><div style='background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:16px 18px'><div style='display:flex;align-items:center;gap:10px;margin-bottom:12px'><div style='width:28px;height:28px;border-radius:50%;background:#3A89DA;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;flex-shrink:0'>5</div><div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Inicializando datos</span><span style='color:#64748b;font-size:12px;margin-left:8px'>Estructura de archivos y agentes</span></div></div><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden'><div style='width:85%;height:100%;background:linear-gradient(90deg,#3A89DA,#00D53A);border-radius:6px'></div></div><p style='color:#94a3b8;font-size:12px;margin:10px 0 0'>Creando directorios de datos, copiando configuraci&oacute;n de agentes y prompts del sistema...</p></div></div>"
+       }
+     },
+     {
+@@ -164,7 +164,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Datos inicializados correctamente</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Datos inicializados correctamente</span></div></div>"
+       }
+     },
+ 
+@@ -173,7 +173,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:20px'><div style='background:linear-gradient(135deg,#0f2d1a,#052e16);border:1px solid #16a34a44;border-radius:12px;padding:24px;text-align:center'><div style='background:#22c55e;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:#fff'>&#10003;</div><h3 style='color:#22c55e;font-size:18px;margin:0 0 8px'>Instalaci&oacute;n completada</h3><p style='color:#86efac;font-size:13px;margin:0 0 16px'>SmartCaja est&aacute; listo para usar.</p><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden;margin-bottom:16px'><div style='width:100%;height:100%;background:linear-gradient(90deg,#22c55e,#4ade80);border-radius:6px'></div></div><div style='display:flex;justify-content:center;gap:16px;flex-wrap:wrap'><div style='background:#1e293b;border-radius:8px;padding:12px 16px;min-width:120px'><div style='color:#94a3b8;font-size:11px;margin-bottom:4px'>Plataforma</div><div style='color:#e2e8f0;font-size:13px;font-weight:600'>{{platform}}</div></div><div style='background:#1e293b;border-radius:8px;padding:12px 16px;min-width:120px'><div style='color:#94a3b8;font-size:11px;margin-bottom:4px'>Modelo IA</div><div style='color:#173A7A;font-size:13px;font-weight:600'>{{ram < 6 ? 'llama3.2:1b' : ram < 12 ? 'llama3.2:3b' : 'llama3.1:8b'}}</div></div><div style='background:#1e293b;border-radius:8px;padding:12px 16px;min-width:120px'><div style='color:#94a3b8;font-size:11px;margin-bottom:4px'>RAM</div><div style='color:#e2e8f0;font-size:13px;font-weight:600'>{{ram}} GB</div></div></div><p style='color:#94a3b8;font-size:13px;margin:20px 0 0'>Haz click en <span style='color:#22c55e;font-weight:700'>Iniciar</span> para comenzar a usar la aplicaci&oacute;n.</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:20px'><div style='background:linear-gradient(135deg,#0f2d1a,#052e16);border:1px solid #16a34a44;border-radius:12px;padding:24px;text-align:center'><div style='background:#00D53A;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:#fff'>&#10003;</div><h3 style='color:#00D53A;font-size:18px;margin:0 0 8px'>Instalaci&oacute;n completada</h3><p style='color:#3A89DA;font-size:13px;margin:0 0 16px'>SmartCaja est&aacute; listo para usar.</p><div style='background:#1e293b;border-radius:6px;height:4px;overflow:hidden;margin-bottom:16px'><div style='width:100%;height:100%;background:linear-gradient(90deg,#00D53A,#3A89DA);border-radius:6px'></div></div><div style='display:flex;justify-content:center;gap:16px;flex-wrap:wrap'><div style='background:#1e293b;border-radius:8px;padding:12px 16px;min-width:120px'><div style='color:#94a3b8;font-size:11px;margin-bottom:4px'>Plataforma</div><div style='color:#e2e8f0;font-size:13px;font-weight:600'>{{platform}}</div></div><div style='background:#1e293b;border-radius:8px;padding:12px 16px;min-width:120px'><div style='color:#94a3b8;font-size:11px;margin-bottom:4px'>Modelo IA</div><div style='color:#002558;font-size:13px;font-weight:600'>{{ram < 6 ? 'llama3.2:1b' : ram < 12 ? 'llama3.2:3b' : 'llama3.1:8b'}}</div></div><div style='background:#1e293b;border-radius:8px;padding:12px 16px;min-width:120px'><div style='color:#94a3b8;font-size:11px;margin-bottom:4px'>RAM</div><div style='color:#e2e8f0;font-size:13px;font-weight:600'>{{ram}} GB</div></div></div><p style='color:#94a3b8;font-size:13px;margin:20px 0 0'>Haz click en <span style='color:#00D53A;font-weight:700'>Iniciar</span> para comenzar a usar la aplicaci&oacute;n.</p></div></div>"
+       }
+     },
+     {
+diff --git a/pinokio.js b/pinokio.js
+index f9728dd..66a62e8 100644
+--- a/pinokio.js
++++ b/pinokio.js
+@@ -55,7 +55,7 @@ module.exports = {
+           icon: "fa-solid fa-circle",
+           text: "En ejecución",
+           href: "start.json",
+-          style: "color: #3DAE2B",
++          style: "color: #00D53A",
+         },
+         {
+           icon: "fa-solid fa-arrow-up-right-from-square",
+diff --git a/start.json b/start.json
+index c9d45af..0ab233f 100644
+--- a/start.json
++++ b/start.json
+@@ -4,14 +4,14 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:20px 20px 0'><div style='display:flex;align-items:center;gap:12px;margin-bottom:12px'><div style='width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#F4C10E,#E0A800);display:flex;align-items:center;justify-content:center;font-size:20px;color:#173A7A;flex-shrink:0'>$</div><div><h3 style='margin:0;font-size:16px;color:#e2e8f0'>Iniciando SmartCaja</h3><p style='margin:2px 0 0;color:#94a3b8;font-size:12px'>Preparando servicios de flujo de caja...</p></div></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:20px 20px 0'><div style='display:flex;align-items:center;gap:12px;margin-bottom:12px'><div style='width:40px;height:40px;border-radius:10px;background:linear-gradient(126.54deg, rgb(0, 215, 0) -3.03%, rgb(0, 86, 202) 56.75%);display:flex;align-items:center;justify-content:center;font-size:20px;color:#002558;flex-shrink:0'>$</div><div><h3 style='margin:0;font-size:16px;color:#e2e8f0'>Iniciando SmartCaja</h3><p style='margin:2px 0 0;color:#94a3b8;font-size:12px'>Preparando servicios de flujo de caja...</p></div></div></div>"
+       }
+     },
+ 
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#06b6d4;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Verificando dependencias Python...</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#3A89DA;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Verificando dependencias Python...</span></div></div>"
+       }
+     },
+     {
+@@ -24,14 +24,14 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Dependencias verificadas</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Dependencias verificadas</span></div></div>"
+       }
+     },
+ 
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Verificando motor de IA (Ollama)...</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#3A89DA;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Verificando motor de IA (Ollama)...</span></div></div>"
+       }
+     },
+     {
+@@ -51,14 +51,14 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#22c55e;font-size:14px'>&#10003;</span><span style='color:#86efac;font-size:12px'>Ollama listo</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:4px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f2d1a;border:1px solid #16a34a33;border-radius:6px'><span style='color:#00D53A;font-size:14px'>&#10003;</span><span style='color:#3A89DA;font-size:12px'>Ollama listo</span></div></div>"
+       }
+     },
+ 
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#3b82f6;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Iniciando servidor de aplicaci&oacute;n...</span></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#3A89DA;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Iniciando servidor de aplicaci&oacute;n...</span></div></div>"
+       }
+     },
+     {
+@@ -88,7 +88,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:12px 20px'><div style='background:linear-gradient(135deg,#0f2d1a,#052e16);border:1px solid #16a34a44;border-radius:10px;padding:16px;text-align:center'><div style='display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px'><span style='color:#22c55e;font-size:16px'>&#10003;</span><span style='color:#22c55e;font-size:15px;font-weight:600'>Aplicaci&oacute;n lista</span></div><p style='color:#94a3b8;font-size:12px;margin:0'>Abriendo interfaz de usuario...</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:12px 20px'><div style='background:linear-gradient(135deg,#0f2d1a,#052e16);border:1px solid #16a34a44;border-radius:10px;padding:16px;text-align:center'><div style='display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px'><span style='color:#00D53A;font-size:16px'>&#10003;</span><span style='color:#00D53A;font-size:15px;font-weight:600'>Aplicaci&oacute;n lista</span></div><p style='color:#94a3b8;font-size:12px;margin:0'>Abriendo interfaz de usuario...</p></div></div>"
+       }
+     },
+     {
+diff --git a/stop.json b/stop.json
+index e170d5e..c55e00a 100644
+--- a/stop.json
++++ b/stop.json
+@@ -25,7 +25,7 @@
+     {
+       "method": "log",
+       "params": {
+-        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='background:#1e293b;border:1px solid #334155;border-radius:10px;padding:16px;text-align:center'><div style='display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px'><div style='width:10px;height:10px;border-radius:50%;background:#64748b'></div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Aplicaci&oacute;n detenida</span></div><p style='color:#94a3b8;font-size:12px;margin:0'>Haz click en <span style='color:#173A7A;font-weight:600'>Iniciar</span> para volver a ejecutar.</p></div></div>"
++        "html": "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:8px 20px'><div style='background:#1e293b;border:1px solid #334155;border-radius:10px;padding:16px;text-align:center'><div style='display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px'><div style='width:10px;height:10px;border-radius:50%;background:#64748b'></div><span style='color:#e2e8f0;font-size:14px;font-weight:600'>Aplicaci&oacute;n detenida</span></div><p style='color:#94a3b8;font-size:12px;margin:0'>Haz click en <span style='color:#002558;font-weight:600'>Iniciar</span> para volver a ejecutar.</p></div></div>"
+       }
+     }
+   ]
+diff --git a/update.js b/update.js
+index 0e04054..3019ea8 100644
+--- a/update.js
++++ b/update.js
+@@ -10,7 +10,7 @@ module.exports = {
+     {
+       method: "log",
+       params: {
+-        html: "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:12px 20px'><div style='display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#F4C10E;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Actualizando SmartCaja a la última versión...</span></div></div>"
++        html: "<div style='font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:12px 20px'><div style='display:flex;align-items:center;gap:8px;padding:10px 14px;background:#0f172a;border:1px solid #1e293b;border-radius:6px'><div style='width:8px;height:8px;border-radius:50%;background:#00D53A;flex-shrink:0'></div><span style='color:#94a3b8;font-size:12px'>Actualizando SmartCaja a la última versión...</span></div></div>"
+       }
+     },
+     {
+-- 
+2.43.0
+

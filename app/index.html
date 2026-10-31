@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartCaja — Cámara Colombiana de Comercio Electrónico (CCCE)</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="lib/purify.min.js"></script>
+  <style>
+    /* ===== FUENTES CCCE ===== */
+    @font-face { font-family: 'DM Sans'; src: url('fonts/DMSans-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('fonts/DMSans-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('fonts/DMSans-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('fonts/DMSans-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('fonts/DMSans-ExtraBold.ttf') format('truetype'); font-weight: 800; font-display: swap; }
+    @font-face { font-family: 'DM Sans'; src: url('fonts/DMSans-Light.ttf') format('truetype'); font-weight: 300; font-display: swap; }
+
+    /* ===== RESET & VARIABLES CCCE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ccce-azul-oscuro: #173A7A;
+      --ccce-azul:        #1E56A8;
+      --ccce-celeste:     #2E6FC0;
+      --ccce-rojo:        #CE1126;
+      --ccce-dorado:      #F4C10E;
+      --ccce-verde:       #3DAE2B;
+      --ccce-verde-brillante: #38C049;
+      --ccce-accent:      #F4C10E;
+      --ccce-accent-strong:#E0A800;
+      --ccs-azul-oscuro:  var(--ccce-azul-oscuro);
+      --ccs-verde:        var(--ccce-verde);
+      --ccs-azul:         var(--ccce-azul);
+      --ccs-celeste:      var(--ccce-celeste);
+      --ccs-verde-brillante: var(--ccce-verde-brillante);
+      --ccs-rojo:         var(--ccce-rojo);
+      --ccs-dorado:       var(--ccce-dorado);
+      --ccs-accent:       var(--ccce-accent);
+      --ccs-gradient: linear-gradient(90deg, var(--ccce-azul-oscuro), var(--ccce-rojo), var(--ccce-dorado));
+      --bg-base: #F7F8FA;
+      --bg-card: #FFFFFF;
+      --bg-hover: #EEF2F8;
+      --primary: #173A7A;
+      --primary-h: #1E56A8;
+      --accent: #F4C10E;
+      --success: #3DAE2B;
+      --success-h: #38C049;
+      --warning: #F4C10E;
+      --danger: #CE1126;
+      --text-main: #1A2340;
+      --text-muted: #6B7A99;
+      --border: #D6DFF0;
+      --border-focus: #1E56A8;
+      --radius: 10px;
+      --sidebar-w: 252px;
+      --shadow-sm: 0 1px 3px rgba(23,58,122,0.08);
+      --shadow-md: 0 4px 12px rgba(23,58,122,0.10);
+    }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+    input, select, textarea {
+      font-family: inherit; font-size: 14px; background: #FFFFFF; color: var(--text-main);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 12px; width: 100%;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(30,86,168,0.12);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; letter-spacing: 0.02em; }
+
+    /* ===== LAYOUT ===== */
+    .app-layout { display: flex; min-height: 100vh; }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: var(--sidebar-w); background: #FFFFFF; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100; overflow-y: auto; box-shadow: var(--shadow-sm);
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px; padding: 16px 14px 14px;
+      background: #FFFFFF;
+      border-bottom: 3px solid transparent;
+      border-image: linear-gradient(90deg, var(--ccs-azul-oscuro) 0 33%, var(--ccs-rojo) 33% 66%, var(--ccs-dorado) 66% 100%) 1;
+    }
+    .sidebar-logo-img { height: 40px; width: auto; max-width: 140px; object-fit: contain; flex-shrink: 0; }
+    .sidebar-logo-divider { width: 2px; height: 28px; background: var(--ccs-dorado); flex-shrink: 0; border-radius: 2px; }
+    .sidebar-logo-text { font-size: 11px; font-weight: 700; color: var(--ccs-azul-oscuro); line-height: 1.3; }
+    .sidebar-logo-sub { font-size: 9px; color: var(--text-muted); font-weight: 400; }
+
+    .sidebar-section { padding: 12px 8px 4px; }
+    .sidebar-section-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 0 8px 6px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: var(--radius);
+      color: var(--text-muted); font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: all 0.15s; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(0,213,58,0.14); color: var(--ccs-azul-oscuro); }
+    .nav-item.active { background: var(--ccs-gradient); color: #fff; font-weight: 700; box-shadow: inset 3px 0 0 var(--ccs-azul-oscuro), 0 2px 8px rgba(0,213,58,0.35); }
+    .nav-item.active .nav-icon { color: var(--ccs-rojo); }
+    .nav-item .nav-icon { width: 18px; text-align: center; font-size: 14px; }
+    .nav-badge { margin-left: auto; background: var(--ccs-rojo); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 20px; }
+
+    .sidebar-footer { margin-top: auto; padding: 12px 8px; border-top: 1px solid var(--border); }
+    .ollama-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); padding: 4px 8px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+    .status-dot.online { background: var(--ccs-verde); }
+    .status-dot.loading { background: var(--warning); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh;
+    }
+    .topbar {
+      background: #FFFFFF; border-bottom: 1px solid var(--border); padding: 12px 24px;
+      padding-right: max(24px, env(titlebar-area-inset-right, 24px));
+      display: flex; align-items: center; gap: 16px;
+      position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-sm);
+      border-top: 3px solid transparent;
+      border-image: linear-gradient(90deg, var(--ccs-azul-oscuro) 0 40%, var(--ccs-rojo) 40% 70%, var(--ccs-dorado) 70% 100%) 1;
+    }
+    @media (max-width: 768px) { .topbar { padding-right: 16px; padding-left: 16px; } }
+    .topbar-title { font-size: 17px; font-weight: 700; color: var(--ccs-azul-oscuro); letter-spacing: -0.01em; white-space: nowrap; flex: 0 0 auto; }
+    .topbar-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; flex: 0 0 auto; }
+    .company-switcher { display: none; align-items: center; gap: 8px; min-width: 180px; flex: 1 1 220px; max-width: 380px; }
+    .company-switcher label { margin: 0; white-space: nowrap; }
+    .company-switcher select { width: auto; min-width: 0; flex: 1; padding: 6px 10px; }
+
+    .page { padding: 24px; display: none; }
+    .page.active { display: block; }
+
+    /* ===== CARDS ===== */
+    .card { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--ccs-azul-oscuro); margin-bottom: 8px; }
+    .card-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ===== BUTTONS ===== */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600; transition: all 0.18s; letter-spacing: 0.01em; }
+    .btn-primary { background: var(--ccs-gradient); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.35); border-bottom: 2px solid var(--ccs-azul-oscuro); }
+    .btn-primary:hover { background: var(--ccs-gradient); box-shadow: 0 4px 12px rgba(0,213,58,0.45); transform: translateY(-1px); }
+    .btn-secondary { background: #FFFFFF; color: var(--ccs-azul-oscuro); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg-hover); border-color: var(--ccs-celeste); color: var(--ccs-azul); }
+    .btn-success { background: linear-gradient(135deg, var(--ccs-verde), var(--ccs-verde-brillante)); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.25); }
+    .btn-success:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-accent { background: var(--ccs-gradient); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.35); }
+    .btn-accent:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    .btn-gold { background: var(--ccs-gradient); color: #fff; box-shadow: 0 2px 6px rgba(0,213,58,0.35); }
+    .btn-gold:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-lg { padding: 12px 28px; font-size: 15px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+    /* ===== GRID ===== */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* ===== STAT CARDS ===== */
+    .stat-card { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow-sm); border-left: 4px solid var(--ccs-dorado); transition: box-shadow 0.2s, transform 0.2s; }
+    .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .stat-card.green { border-left-color: var(--ccs-verde); }
+    .stat-card.blue { border-left-color: var(--ccs-azul); }
+    .stat-card.celeste { border-left-color: var(--ccs-celeste); }
+    .stat-card.red { border-left-color: var(--ccs-rojo); }
+    .stat-card.yellow { border-left-color: var(--ccs-dorado); }
+    .stat-card.gold { border-left-color: var(--ccs-dorado); }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    .stat-value { font-size: 26px; font-weight: 800; margin: 4px 0; color: var(--ccs-azul-oscuro); }
+    .stat-sub { font-size: 11px; color: var(--text-muted); }
+
+    /* ===== COMPANY CARDS ===== */
+    .company-card {
+      background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 16px; cursor: pointer; transition: all 0.18s; box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .company-delete {
+      position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%;
+      border: 1px solid var(--border); background: #fff; color: var(--danger); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .company-delete:hover { background: #fee2e2; border-color: var(--danger); }
+    .company-card:hover { border-color: var(--ccs-azul); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .company-card.selected { border-color: var(--ccs-azul-oscuro); background: rgba(0,37,88,0.04); box-shadow: 0 0 0 2px rgba(0,37,88,0.15); }
+    .company-avatar {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: var(--ccs-gradient);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 10px;
+      border: 2px solid var(--ccs-azul-oscuro);
+    }
+    .company-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; color: var(--text-main); }
+    .company-sector { font-size: 11px; color: var(--text-muted); }
+    .company-status { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-top: 8px; }
+    .status-pending { background: rgba(245,158,11,0.12); color: #b45309; }
+    .status-interviewing { background: rgba(0,37,88,0.12); color: var(--ccs-azul-oscuro); }
+    .status-complete { background: rgba(0,213,58,0.12); color: #166534; }
+
+    /* ===== FORMS ===== */
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(13,29,66,0.45); backdrop-filter: blur(3px); z-index: 200; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #FFFFFF; border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 560px; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,37,88,0.18); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px 16px 28px; border-bottom: 2px solid var(--border); }
+    .modal-body { overflow-y: auto; padding: 20px 28px 28px 28px; flex: 1; }
+    .modal-title { font-size: 17px; font-weight: 700; color: var(--ccs-azul-oscuro); }
+    .modal-close { background: none; color: var(--text-muted); font-size: 20px; padding: 4px 8px; border-radius: 6px; }
+    .modal-close:hover { color: var(--danger); background: rgba(220,38,38,0.08); }
+
+    /* ===== CHAT ===== */
+    .chat-container { display: flex; flex-direction: column; height: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .chat-message { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+    .chat-message.user { background: var(--ccs-gradient); color: #fff; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-message.assistant { background: #FFFFFF; border: 1px solid var(--border); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: var(--shadow-sm); }
+    .chat-message.system-msg { background: rgba(58,137,218,0.08); border: 1px solid rgba(58,137,218,0.25); color: var(--ccs-azul); align-self: center; text-align: center; font-size: 12px; max-width: 90%; }
+    .chat-input-area { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--border); background: #FFFFFF; }
+    .chat-input { flex: 1; resize: none; min-height: 44px; max-height: 120px; font-size: 13px; padding: 10px 12px; line-height: 1.4; }
+
+    /* ===== PROGRESS ===== */
+    .progress-bar { height: 8px; background: var(--bg-hover); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--ccs-gradient); border-radius: 4px; transition: width 0.5s ease; }
+    .notification-item { padding: 8px 12px; background: rgba(58,137,218,0.06); border: 1px solid rgba(58,137,218,0.15); border-radius: 8px; font-size: 12px; margin-bottom: 6px; animation: slideIn 0.3s ease; color: var(--text-main); }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* ===== NOTIFICATIONS ===== */
+    .notification-area { position: fixed; top: 16px; right: 16px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
+    .notification { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; animation: slideIn 0.3s ease; box-shadow: var(--shadow-md); color: var(--text-main); }
+    .notification.success { border-left: 4px solid var(--ccs-verde); }
+    .notification.error { border-left: 4px solid var(--danger); }
+    .notification.info { border-left: 4px solid var(--ccs-azul); }
+
+    /* ===== LOADING ===== */
+    .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,213,58,0.25); border-top-color: var(--ccs-dorado); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== EMPTY STATES ===== */
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; color: var(--ccs-celeste); }
+    .empty-title { font-size: 16px; font-weight: 700; color: var(--ccs-azul-oscuro); margin-bottom: 6px; }
+    .empty-desc { font-size: 13px; margin-bottom: 20px; }
+
+    /* ===== READINESS BANNER ===== */
+    .readiness-banner { padding: 14px 20px; border-radius: var(--radius); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; animation: fadeIn 0.4s ease; }
+    .readiness-banner.ready { background: linear-gradient(135deg, rgba(0,213,58,0.08), rgba(0,213,58,0.06)); border: 1px solid rgba(0,213,58,0.3); color: #1a7a12; }
+    .readiness-banner.not-ready { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.04)); border: 1px solid rgba(245,158,11,0.3); color: #92400e; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ===== TABS ===== */
+    .tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 20px; }
+    .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+    .tab:hover { color: var(--ccs-azul); }
+    .tab.active { color: var(--ccs-azul-oscuro); border-bottom-color: var(--ccs-dorado); }
+
+    /* ===== TABLE ===== */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .data-table th { background: var(--bg-hover); color: var(--text-muted); padding: 8px 10px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; border-radius: 4px; }
+    .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+    .data-table tr:hover { background: rgba(58,137,218,0.03); }
+    .positive { color: var(--ccs-verde); font-weight: 600; }
+    .negative { color: var(--danger); font-weight: 600; }
+
+    /* ===== SLIDER ===== */
+    .slider-group { margin-bottom: 16px; }
+    .slider-group label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    .slider-group input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px; background: var(--border); outline: none; padding: 0; border: none; }
+    .slider-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--ccs-azul); cursor: pointer; }
+
+    /* ===== GLOBAL LOADING ===== */
+    .global-loading-overlay { position: fixed; inset: 0; background: rgba(26, 35, 64, 0.35); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+    .global-loading-overlay.active { display: flex; }
+    .global-loading-content { background: #fff; border-radius: 12px; padding: 32px 40px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+    .global-loading-content .loading-spinner { width: 32px; height: 32px; border-width: 3px; margin-bottom: 12px; }
+    .global-loading-content .loading-label { font-size: 14px; font-weight: 600; color: var(--ccs-azul-oscuro); }
+    .global-loading-content .loading-sublabel { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* ===== INTERVIEW TOPICS ===== */
+    .topic-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(58,137,218,0.04); border: 1px solid var(--border); font-size: 11px; color: var(--text-muted); cursor: pointer; text-align: left; width: 100%; font-family: inherit; }
+    .topic-item:hover { border-color: var(--ccs-azul); background: rgba(58,137,218,0.10); color: var(--ccs-azul-oscuro); }
+    .topic-item.covered { background: rgba(0,213,58,0.06); border-color: rgba(0,213,58,0.3); color: #166534; }
+    .topic-item.current { border-color: var(--ccs-azul); background: rgba(58,137,218,0.14); color: var(--ccs-azul-oscuro); font-weight: 700; box-shadow: 0 0 0 2px rgba(58,137,218,0.18); }
+    .topic-item .topic-icon { width: 16px; text-align: center; font-size: 11px; }
+    .topic-item .topic-help { margin-left: auto; border: 0; background: transparent; color: var(--ccs-azul); cursor: pointer; padding: 0 2px; font-size: 11px; }
+    .topic-stage { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ccs-azul-oscuro); margin: 12px 0 6px; padding-bottom: 4px; border-bottom: 2px solid transparent; border-image: var(--ccs-gradient) 1; }
+    .interview-hint { font-size: 11px; color: var(--text-muted); line-height: 1.45; margin-top: 10px; padding: 10px; background: #F7F8FA; border-radius: 8px; border: 1px solid var(--border); }
+    .help-icon-btn {
+      width: 32px; height: 32px; min-width: 32px; min-height: 32px; flex: 0 0 32px;
+      aspect-ratio: 1 / 1; padding: 0; border-radius: 50%; border: 1px solid var(--border);
+      background: #fff; color: var(--ccs-azul); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .help-icon-btn i { font-size: 13px; line-height: 1; width: auto; height: auto; }
+    .help-icon-btn:hover { background: var(--ccs-gradient); color: #fff; border-color: transparent; }
+    .interview-layout { display: flex; gap: 16px; height: calc(100vh - 130px); }
+    .interview-chat { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .interview-topics-col { width: 280px; flex-shrink: 0; overflow-y: auto; }
+    .interview-toolbar {
+      padding: 12px 16px; border-bottom: 1px solid var(--border); background: #fff;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap;
+    }
+    .interview-toolbar-title { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 200px; }
+    .interview-kicker { font-size: 13px; font-weight: 700; color: var(--ccs-azul-oscuro); white-space: nowrap; }
+    .interview-company { font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .interview-toolbar-actions { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+    .interview-toolbar-actions .btn { flex: 0 0 auto; white-space: nowrap; }
+    .interview-progress { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+    .glossary-search { margin-bottom: 12px; }
+    @media (max-width: 1100px) {
+      .interview-layout { flex-direction: column; height: auto; min-height: calc(100vh - 130px); }
+      .interview-topics-col { width: 100%; max-height: 280px; }
+      .interview-chat { min-height: 520px; }
+    }
+    .slider-hint { font-size: 11px; color: var(--text-muted); margin: 0 0 14px; line-height: 1.45; }
+    .glossary-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+    .glossary-term.focused { background: rgba(58,137,218,0.08); border-radius: 8px; padding: 8px; scroll-margin-top: 8px; }
+    .agent-mark {
+      width: 40px; height: 40px; min-width: 40px; flex: 0 0 40px; aspect-ratio: 1 / 1;
+      border-radius: 50%; background: var(--ccs-azul); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .agent-mark i { font-size: 16px; line-height: 1; color: #fff; }
+    #importDropZone.dragover { border-color: var(--ccs-azul); background: rgba(58,137,218,0.08); }
+    .glossary-term { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .glossary-term h4 { color: var(--ccs-azul-oscuro); font-size: 13px; margin-bottom: 4px; }
+    .glossary-formula { font-size: 12px; background: rgba(58,137,218,0.08); border-left: 3px solid var(--ccs-azul); padding: 8px 10px; margin-top: 8px; border-radius: 0 6px 6px 0; }
+    .calc-box { background: #F7F8FA; border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 10px; }
+    .calc-result { margin-top: 8px; font-weight: 700; color: var(--ccs-azul-oscuro); }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,37,88,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,37,88,0.35); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) { .grid-4 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 768px) {
+      .sidebar { width: 60px; }
+      .sidebar .sidebar-logo-text, .sidebar .sidebar-logo-sub, .sidebar .sidebar-logo-divider,
+      .sidebar .sidebar-section-label, .sidebar .nav-item span:not(.nav-icon),
+      .sidebar .sidebar-footer .company-info { display: none; }
+      .main-content { margin-left: 60px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .topbar { padding-right: 24px; }
+    }
+
+    /* ===== WIZARD STEPS ===== */
+    .wizard-steps { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+    .wizard-step { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .wizard-step.active { color: var(--ccs-azul-oscuro); }
+    .wizard-step.done { color: var(--ccs-verde); }
+    .wizard-step-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid var(--border); }
+    .wizard-step.active .wizard-step-num { background: var(--ccs-azul-oscuro); color: #fff; border-color: var(--ccs-azul-oscuro); }
+    .wizard-step.done .wizard-step-num { background: var(--ccs-verde); color: #fff; border-color: var(--ccs-verde); }
+    .wizard-connector { width: 24px; height: 2px; background: var(--border); }
+    .wizard-connector.done { background: var(--ccs-verde); }
+
+    /* ===== ONBOARDING HERO ===== */
+    .welcome-hero { text-align: center; padding: 40px 20px; max-width: 600px; margin: 0 auto 32px; }
+    .welcome-icon { font-size: 56px; color: var(--ccs-dorado); margin-bottom: 16px; text-shadow: 0 2px 4px rgba(0,37,88,0.15); }
+    .welcome-logo { height: 64px; width: auto; max-width: 280px; object-fit: contain; margin: 0 auto 16px; display: block; }
+    .welcome-title { font-size: 24px; font-weight: 800; color: var(--ccs-azul-oscuro); margin-bottom: 8px; }
+    .welcome-title::after { content: ""; display: block; width: 64px; height: 4px; margin: 10px auto 0; border-radius: 4px; background: linear-gradient(90deg, var(--ccs-azul-oscuro), var(--ccs-rojo), var(--ccs-dorado)); }
+    .welcome-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+
+    /* ===== SUGGESTION CHIPS ===== */
+    .suggestion-chips { padding: 8px 16px; border-top: 1px solid var(--border); background: #f8fafc; }
+    .chips-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; font-weight: 600; }
+    .chips-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip-btn {
+      padding: 6px 12px; border-radius: 16px; border: 1px solid var(--ccs-dorado);
+      background: #fff; color: var(--ccs-azul-oscuro); font-size: 12px; cursor: pointer;
+      transition: all 0.2s; font-weight: 600;
+    }
+    .chip-btn:hover { background: var(--ccs-dorado); color: var(--ccs-azul-oscuro); transform: translateY(-1px); }
+
+    /* ===== TOPIC ITEM COVERED ===== */
+    .topic-item.covered .topic-icon i { color: var(--ccs-verde) !important; }
+
+    /* ===== PULSE ANIMATION ===== */
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    .pulse-animation { animation: pulse 1.5s infinite; }
+
+    /* ===== NOTIFICATION ITEM ===== */
+    .notification-item { padding: 6px 10px; font-size: 12px; color: var(--text-body); border-left: 3px solid var(--ccs-azul); margin-bottom: 4px; background: #f0f4ff; border-radius: 0 4px 4px 0; }
+
+    /* ===== SIM RESULT ===== */
+    #simResult { display: flex; gap: 12px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<!-- Global Loading Overlay -->
+<div class="global-loading-overlay" id="globalLoadingOverlay">
+  <div class="global-loading-content">
+    <div class="loading-spinner"></div>
+    <div class="loading-label" id="globalLoadingLabel">Procesando...</div>
+    <div class="loading-sublabel" id="globalLoadingSublabel">Por favor espera un momento</div>
+  </div>
+</div>
+
+<!-- Notificaciones -->
+<div class="notification-area" id="notificationArea"></div>
+
+<!-- Layout -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo-ccce.png" alt="SmartCaja — Cámara Colombiana de Comercio Electrónico" class="sidebar-logo-img" onerror="this.style.display='none'">
+      <div class="sidebar-logo-divider"></div>
+      <div>
+        <div class="sidebar-logo-text">SmartCaja</div>
+        <div class="sidebar-logo-sub">CCCE · IA local para PYMEs</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Principal</div>
+      <div class="nav-item active" onclick="navigateTo('home')" id="nav-home">
+        <span class="nav-icon"><i class="fas fa-home"></i></span> <span>Inicio</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('companies')" id="nav-companies">
+        <span class="nav-icon"><i class="fas fa-building"></i></span> <span>Empresas</span>
+        <span class="nav-badge" id="companiesBadge">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section" id="companyToolsSection" style="display:none">
+      <div class="sidebar-section-label" id="activeCompanyLabel">Empresa activa</div>
+      <div class="nav-item" onclick="navigateTo('interview')" id="nav-interview">
+        <span class="nav-icon"><i class="fas fa-comments"></i></span> <span>Entrevista</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('dashboard')" id="nav-dashboard">
+        <span class="nav-icon"><i class="fas fa-chart-pie"></i></span> <span>Dashboard</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('simulation')" id="nav-simulation">
+        <span class="nav-icon"><i class="fas fa-flask"></i></span> <span>Simulación</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('montecarlo')" id="nav-montecarlo">
+        <span class="nav-icon"><i class="fas fa-dice"></i></span> <span>Monte Carlo</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('scenarios')" id="nav-scenarios">
+        <span class="nav-icon"><i class="fas fa-code-branch"></i></span> <span>Escenarios</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('metrics')" id="nav-metrics">
+        <span class="nav-icon"><i class="fas fa-tachometer-alt"></i></span> <span>Métricas</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Sistema</div>
+      <div class="nav-item" onclick="navigateTo('agents')" id="nav-agents">
+        <span class="nav-icon"><i class="fas fa-robot"></i></span> <span>Agentes & Skills</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('tokens')" id="nav-tokens">
+        <span class="nav-icon"><i class="fas fa-chart-bar"></i></span> <span>Uso de Tokens</span>
+      </div>
+      <div class="nav-item" onclick="navigateTo('settings')" id="nav-settings">
+        <span class="nav-icon"><i class="fas fa-cog"></i></span> <span>Configuración</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="ollama-status">
+        <div class="status-dot loading" id="ollamaDot"></div>
+        <span id="ollamaStatusText">Verificando...</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-title" id="pageTitle">Inicio</div>
+      <div class="company-switcher" id="companySwitcher">
+        <label for="companyFilter">Empresa</label>
+        <select id="companyFilter" onchange="onCompanyFilterChange(this.value)" aria-label="Cambiar de empresa"></select>
+      </div>
+      <div class="topbar-actions" id="topbarActions">
+        <button type="button" class="help-icon-btn" id="btnGlobalGlossary" title="Glosario y calculadoras" onclick="openGlossary()">
+          <i class="fas fa-book-open"></i>
+        </button>
+      </div>
+    </div>
+    <div id="ramWarnBanner"></div>
+
+    <!-- ===== PAGE: HOME (Onboarding) ===== -->
+    <div class="page active" id="page-home">
+      <div id="readinessBanner"></div>
+
+      <div class="welcome-hero">
+        <img src="logo-ccce.png" alt="Cámara Colombiana de Comercio Electrónico" class="welcome-logo">
+        <div class="welcome-title">SmartCaja</div>
+        <div class="welcome-sub">
+          Crea, analiza y proyecta flujos de caja de manera inteligente para tu PYME.
+          Usa inteligencia artificial local para entender tu situación financiera,
+          simular escenarios y tomar mejores decisiones.
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="openModal('newCompanyModal')">
+          <i class="fas fa-plus"></i> Crear nueva empresa
+        </button>
+      </div>
+
+      <div class="grid-3" style="max-width:900px;margin:0 auto">
+        <div class="card" style="text-align:center">
+          <div style="font-size:28px;color:var(--ccs-azul-oscuro);margin-bottom:8px"><i class="fas fa-comments"></i></div>
+          <div class="card-title" style="justify-content:center">Entrevista Guiada</div>
+          <div class="card-subtitle">El asistente te guía por etapas. Tú eliges cuándo generar el flujo con el botón; no es obligatorio llegar al 100%.</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:28px;color:var(--ccs-rojo);margin-bottom:8px"><i class="fas fa-chart-pie"></i></div>
+          <div class="card-title" style="justify-content:center">Dashboard Inteligente</div>
+          <div class="card-subtitle">Visualiza ingresos, egresos, márgenes y alertas financieras en tiempo real</div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div style="font-size:28px;color:var(--ccs-dorado);margin-bottom:8px"><i class="fas fa-dice"></i></div>
+          <div class="card-title" style="justify-content:center">Simulación Monte Carlo</div>
+          <div class="card-subtitle">Evalúa riesgos con miles de escenarios y toma decisiones informadas</div>
+        </div>
+      </div>
+
+      <!-- Quick access to existing companies -->
+      <div style="max-width:900px;margin:24px auto 0">
+        <div id="homeCompaniesList"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: COMPANIES ===== -->
+    <div class="page" id="page-companies">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div>
+          <h2 style="font-size:18px;font-weight:700;color:var(--ccs-azul-oscuro)">Mis Empresas</h2>
+          <p style="font-size:12px;color:var(--text-muted)">Gestiona las empresas para las que quieres crear flujos de caja</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('newCompanyModal')">
+          <i class="fas fa-plus"></i> Nueva Empresa
+        </button>
+      </div>
+      <div class="grid-3" id="companiesGrid"></div>
+    </div>
+
+    <!-- ===== PAGE: INTERVIEW ===== -->
+    <div class="page" id="page-interview">
+      <div class="interview-layout">
+        <!-- Chat -->
+        <div class="interview-chat">
+          <div class="card" style="flex:1; display:flex; flex-direction:column; padding:0; overflow:hidden;">
+            <div class="interview-toolbar">
+              <div class="interview-toolbar-title">
+                <span class="interview-kicker">Entrevista Financiera</span>
+                <span class="interview-company" id="interviewCompanyName"></span>
+              </div>
+              <div class="interview-toolbar-actions">
+                <span class="interview-progress" id="interviewProgressLabel">Progreso: <strong id="interviewPct" style="color:var(--ccs-azul);">0%</strong></span>
+                <button type="button" class="help-icon-btn" title="Glosario y calculadoras" onclick="openGlossary()"><i class="fas fa-question"></i></button>
+                <button class="btn btn-success btn-sm" id="btnGenerateCashflow" onclick="generateCashflow()">
+                  <i class="fas fa-magic"></i> Generar Cashflow
+                </button>
+              </div>
+            </div>
+            <div class="chat-container" style="border:none; border-radius:0; flex:1;">
+              <div class="chat-messages" id="chatMessages">
+                <div class="chat-message system-msg">Selecciona o crea una empresa para comenzar la entrevista financiera.</div>
+              </div>
+              <div class="chat-input-area">
+                <textarea class="chat-input" id="chatInput" placeholder="Escribe tu respuesta..." onkeydown="handleChatKey(event)" disabled></textarea>
+                <button class="btn btn-primary" id="btnSendChat" onclick="sendMessage()" disabled>
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Interview Topics Panel -->
+        <div class="interview-topics-col">
+          <div class="card">
+            <div class="card-title" style="font-size:13px;"><i class="fas fa-tasks" style="color:var(--ccs-azul);"></i> Temas de la Entrevista</div>
+            <div id="interviewTopics"></div>
+            <div class="interview-hint" id="interviewHint">El 100% son todos los temas. No es obligatorio completarlos: genera cuando tengas lo esencial (negocio, precios, costos y caja). Haz clic en un tema para saltar a él.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: DASHBOARD ===== -->
+    <div class="page" id="page-dashboard">
+      <!-- Generation Progress -->
+      <div id="genProgressPanel" class="card" style="display:none;">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-cog fa-spin" style="color:var(--ccs-azul);"></i> Generando Flujo de Caja</div>
+            <div class="card-subtitle" id="genStep">Iniciando...</div>
+          </div>
+          <span id="genPct" style="font-size:15px; font-weight:700; color:var(--ccs-azul);">0%</span>
+        </div>
+        <div class="progress-bar"><div id="genBar" class="progress-fill" style="width:0%"></div></div>
+        <div id="genNotifications" style="max-height:200px; overflow-y:auto; margin-top:12px;"></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid-4" id="dashboardStats" style="margin-bottom:16px;"></div>
+
+      <!-- Charts -->
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Flujo de Caja Acumulado</div></div>
+          <canvas id="chartCashflow" height="200"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Ingresos vs Gastos</div></div>
+          <canvas id="chartIncomeExpense" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Detalle Mensual</div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-sm btn-secondary" onclick="exportCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+            <button class="btn btn-sm btn-primary" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;" id="dashboardTable"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: SIMULATION ===== -->
+    <div class="page" id="page-simulation">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><i class="fas fa-sliders" style="color:var(--ccs-azul);"></i> Variables de Simulación</div>
+          <p class="slider-hint">0% es tu escenario actual. Un +20% en ventas significa vender un 20% más que hoy; un −10% en costos fijos es recortar esos gastos un 10%.</p>
+          <div id="simulationControls"></div>
+          <div class="form-actions">
+            <button class="btn btn-secondary" onclick="resetSliders()"><i class="fas fa-undo"></i> Resetear</button>
+            <button class="btn btn-primary" onclick="applySimulation()"><i class="fas fa-play"></i> Simular</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fas fa-chart-bar" style="color:var(--ccs-verde);"></i> Resultado</div>
+          <canvas id="chartSimulation" height="250"></canvas>
+          <div id="simImpact" style="margin-top:12px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: MONTE CARLO ===== -->
+    <div class="page" id="page-montecarlo">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-dice" style="color:var(--ccs-azul);"></i> Simulación Monte Carlo</div>
+            <div class="card-subtitle">Miles de escenarios aleatorios para estimar el riesgo de quedarte sin caja</div>
+          </div>
+          <div style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
+            <div class="form-group" style="margin:0; width:140px;">
+              <label>Iteraciones</label>
+              <input type="number" id="mcIterations" value="1000" min="100" max="5000" step="100">
+            </div>
+            <button class="btn btn-primary" onclick="runMonteCarlo()"><i class="fas fa-play"></i> Ejecutar Simulación</button>
+          </div>
+        </div>
+        <p class="slider-hint" style="margin:0 0 16px;">Más iteraciones = más precisión y más tiempo (mín. 100, máx. 5.000). El percentil P5 es un escenario malo; P50 la mediana; P95 uno favorable.</p>
+        <div class="grid-4" id="mcStats" style="margin-bottom:16px;"></div>
+        <div class="grid-2">
+          <div><canvas id="chartMC" height="200"></canvas></div>
+          <div><canvas id="chartMCHist" height="200"></canvas></div>
+        </div>
+        <div id="mcSensitivity" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: SCENARIOS ===== -->
+    <div class="page" id="page-scenarios">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title"><i class="fas fa-code-branch" style="color:var(--ccs-azul);"></i> Escenarios y Versiones</div>
+            <div class="card-subtitle">Compara diferentes planes y guarda versiones</div>
+          </div>
+          <button class="btn btn-primary" onclick="saveVersion()"><i class="fas fa-save"></i> Guardar Versión</button>
+        </div>
+        <div id="scenariosList"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: METRICS ===== -->
+    <div class="page" id="page-metrics">
+      <div id="metricsContent"></div>
+    </div>
+
+    <!-- ===== PAGE: AGENTS ===== -->
+    <div class="page" id="page-agents">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 style="font-size:18px; font-weight:700; color:var(--ccs-azul-oscuro);"><i class="fas fa-robot" style="color:var(--ccs-azul);"></i> Agentes & Skills</h2>
+        <button class="btn btn-primary btn-sm" onclick="saveAgents()"><i class="fas fa-save"></i> Guardar Cambios</button>
+      </div>
+      <div id="agentsGrid" class="grid-2" style="gap:16px;"></div>
+    </div>
+
+    <!-- ===== PAGE: TOKENS ===== -->
+    <div class="page" id="page-tokens">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 style="font-size:18px; font-weight:700; color:var(--ccs-azul-oscuro);"><i class="fas fa-chart-bar" style="color:var(--ccs-azul);"></i> Uso de Tokens</h2>
+        <button class="btn btn-sm" onclick="resetTokenStats()" style="border:1px solid var(--border);"><i class="fas fa-redo"></i> Resetear</button>
+      </div>
+      <div class="grid-4" id="tokenStats" style="margin-bottom:20px;"></div>
+      <div class="card">
+        <div class="card-title">Historial de Uso por Agente</div>
+        <canvas id="chartTokens" height="200"></canvas>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Detalle de Sesiones</div>
+        <div id="tokenSessionsList" style="max-height:300px; overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: SETTINGS ===== -->
+    <div class="page" id="page-settings">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-cog" style="color:var(--ccs-azul);"></i> Configuración del Sistema</div>
+        <div id="settingsContent"></div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- ===== MODAL: Nueva Empresa ===== -->
+<div class="modal-overlay" id="newCompanyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-building" style="color:var(--ccs-azul);"></i> Crear Nueva Empresa</div>
+      <button class="modal-close" onclick="closeModal('newCompanyModal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <!-- Wizard Steps -->
+      <div class="wizard-steps" id="wizardSteps">
+        <div class="wizard-step active" id="ws-1"><div class="wizard-step-num">1</div> <span>Datos básicos</span></div>
+        <div class="wizard-connector" id="wc-1"></div>
+        <div class="wizard-step" id="ws-2"><div class="wizard-step-num">2</div> <span>Parámetros</span></div>
+        <div class="wizard-connector" id="wc-2"></div>
+        <div class="wizard-step" id="ws-3"><div class="wizard-step-num">3</div> <span>Confirmar</span></div>
+      </div>
+
+      <!-- Step 1: Datos básicos -->
+      <div id="wizardStep1">
+        <div class="form-group">
+          <label>Nombre de la empresa *</label>
+          <input type="text" id="companyName" placeholder="Ej: Panadería Don Pedro">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sector / Rubro *</label>
+            <select id="companySector">
+              <option value="">Seleccionar...</option>
+              <option value="comercio">Comercio</option>
+              <option value="servicios">Servicios profesionales</option>
+              <option value="manufactura">Manufactura</option>
+              <option value="tecnologia">Tecnología</option>
+              <option value="alimentos">Alimentos y Bebidas</option>
+              <option value="salud">Salud</option>
+              <option value="educacion">Educación</option>
+              <option value="construccion">Construcción</option>
+              <option value="transporte">Transporte</option>
+              <option value="turismo">Turismo y Hotelería</option>
+              <option value="retail">Retail</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tamaño de la empresa</label>
+            <select id="companySize">
+              <option value="">Seleccionar...</option>
+              <option value="micro">Micro (1-10 empleados)</option>
+              <option value="pequena">Pequeña (11-50 empleados)</option>
+              <option value="mediana">Mediana (51-200 empleados)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>NIT / RUT (opcional)</label>
+          <input type="text" id="companyNit" placeholder="Ej: 900.123.456-7" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Descripción breve del negocio</label>
+          <textarea id="companyDescription" placeholder="Describe brevemente a qué se dedica tu empresa, qué productos o servicios ofrece..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="closeModal('newCompanyModal')">Cancelar</button>
+          <button class="btn btn-primary" onclick="wizardNext(1)">Siguiente <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Step 2: Parámetros iniciales -->
+      <div id="wizardStep2" style="display:none">
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">
+          Estos datos se usarán en la entrevista. El asistente te pedirá <strong>confirmarlos o ajustarlos</strong>, no volver a responderlos desde cero. Si no los conoces, déjalos en blanco y los estimamos juntos.
+        </p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>País</label>
+            <select id="companyCountry">
+              <option value="Colombia" selected>Colombia</option>
+              <option value="Mexico">México</option>
+              <option value="Chile">Chile</option>
+              <option value="Argentina">Argentina</option>
+              <option value="Peru">Perú</option>
+              <option value="España">España</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Moneda</label>
+            <select id="companyCurrency">
+              <option value="COP" selected>COP (Peso colombiano)</option>
+              <option value="USD">USD (Dólar)</option>
+              <option value="MXN">MXN (Peso mexicano)</option>
+              <option value="CLP">CLP (Peso chileno)</option>
+              <option value="ARS">ARS (Peso argentino)</option>
+              <option value="PEN">PEN (Sol peruano)</option>
+              <option value="EUR">EUR (Euro)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Caja inicial aproximada</label>
+            <input type="number" id="companyInitialCash" placeholder="Ej: 20000000">
+          </div>
+          <div class="form-group">
+            <label>Empleados actuales</label>
+            <input type="number" id="companyEmployees" placeholder="Ej: 5">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Antigüedad del negocio</label>
+          <select id="companyAge">
+            <option value="">Seleccionar...</option>
+            <option value="nuevo">Menos de 1 año</option>
+            <option value="joven">1-3 años</option>
+            <option value="establecido">3-5 años</option>
+            <option value="maduro">Más de 5 años</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="wizardBack(2)"><i class="fas fa-arrow-left"></i> Atrás</button>
+          <button class="btn btn-primary" onclick="wizardNext(2)">Siguiente <i class="fas fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+      <!-- Step 3: Confirmación -->
+      <div id="wizardStep3" style="display:none">
+        <div style="background:var(--bg-base); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:16px;">
+          <div style="font-size:13px; font-weight:700; color:var(--ccs-azul-oscuro); margin-bottom:12px;">Resumen de la empresa</div>
+          <div id="companySummary"></div>
+        </div>
+        <div class="readiness-banner ready" style="margin-bottom:0;">
+          <div style="font-size:20px;">&#128640;</div>
+          <div>
+            <div style="font-weight:700;">¡Listo para comenzar!</div>
+            <div style="font-size:12px; opacity:0.8;">Al crear la empresa, la entrevista partirá de estos datos: te pediremos confirmarlos o cambiarlos, no repetirlos.</div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" onclick="wizardBack(3)"><i class="fas fa-arrow-left"></i> Atrás</button>
+          <button class="btn btn-success btn-lg" onclick="createCompany()">
+            <i class="fas fa-rocket"></i> Crear y Comenzar Entrevista
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Glosario y calculadoras ===== -->
+<div class="modal-overlay" id="glossaryModal">
+  <div class="modal" style="max-width:640px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column;">
+    <div class="modal-header">
+      <div class="modal-title"><i class="fas fa-book-open" style="color:var(--ccs-azul);"></i> Glosario y calculadoras</div>
+      <button class="modal-close" onclick="closeModal('glossaryModal')">&times;</button>
+    </div>
+    <div class="modal-body" style="display:flex; flex-direction:column; min-height:0; overflow:hidden;">
+      <input type="search" id="glossarySearch" class="glossary-search" placeholder="Buscar término o fórmula..." oninput="onGlossarySearch(this.value)" aria-label="Buscar en el glosario">
+      <div class="glossary-tabs">
+        <button type="button" class="tab active" id="glossaryTabDefs" onclick="showGlossaryTab('definiciones')">Definiciones</button>
+        <button type="button" class="tab" id="glossaryTabCalcs" onclick="showGlossaryTab('calculadoras')">Calculadoras</button>
+      </div>
+      <div id="glossaryScroll" style="overflow-y:auto; max-height:62vh;">
+        <div id="glossaryContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

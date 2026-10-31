@@ -1,0 +1,2041 @@
+=== tauri build --verbose 2026-10-28T01:47:36.827Z ===
+       Debug [tauri_cli::helpers::app_paths] Found Tauri project inside C:\Users\Oscar\SmartCaja-CCS\desktop\src-tauri on early lookup
+        Info [tauri_cli::build] Looking up installed tauri packages to check mismatched versions...
+     Running [tauri_cli] Command `cargo build --bins --features tauri/custom-protocol --release`
+[1m[92m   Compiling[0m proc-macro2 v1.0.107
+[1m[92m   Compiling[0m unicode-ident v1.0.24
+[1m[92m   Compiling[0m quote v1.0.47
+[1m[92m   Compiling[0m serde_core v1.0.229
+[1m[92m   Compiling[0m siphasher v1.0.3
+[1m[92m   Compiling[0m icu_properties_data v2.3.0
+[1m[92m   Compiling[0m icu_normalizer_data v2.3.0
+[1m[92m   Compiling[0m cfg-if v1.0.4
+[1m[92m   Compiling[0m fastrand v2.5.0
+[1m[92m   Compiling[0m stable_deref_trait v1.2.1
+[1m[92m   Compiling[0m zmij v1.0.23
+[1m[92m   Compiling[0m smallvec v1.16.1
+[1m[92m   Compiling[0m thiserror v2.0.20
+[1m[92m   Compiling[0m parking_lot_core v0.9.12
+[1m[92m   Compiling[0m windows-link v0.2.1
+[1m[92m   Compiling[0m serde v1.0.229
+[1m[92m   Compiling[0m memchr v2.8.3
+[1m[92m   Compiling[0m windows_x86_64_msvc v0.52.6
+[1m[92m   Compiling[0m typeid v1.0.3
+[1m[92m   Compiling[0m time-core v0.1.9
+[1m[92m   Compiling[0m num-conv v0.2.2
+[1m[92m   Compiling[0m shlex v2.0.1
+[1m[92m   Compiling[0m erased-serde v0.4.10
+[1m[92m   Compiling[0m phf_shared v0.13.1
+[1m[92m   Compiling[0m ident_case v1.0.1
+[1m[92m   Compiling[0m strsim v0.11.1
+[1m[92m   Compiling[0m itoa v1.0.18
+[1m[92m   Compiling[0m thiserror v1.0.69
+[1m[92m   Compiling[0m litemap v0.8.3
+[1m[92m   Compiling[0m writeable v0.6.4
+[1m[92m   Compiling[0m find-msvc-tools v0.1.12
+[1m[92m   Compiling[0m utf8_iter v1.0.4
+[1m[92m   Compiling[0m new_debug_unreachable v1.0.6
+[1m[92m   Compiling[0m anyhow v1.0.104
+[1m[92m   Compiling[0m scopeguard v1.2.0
+[1m[92m   Compiling[0m phf_generator v0.13.1
+[1m[92m   Compiling[0m winnow v1.0.4
+[1m[92m   Compiling[0m lock_api v0.4.14
+[1m[92m   Compiling[0m precomputed-hash v0.1.1
+[1m[92m   Compiling[0m serde_json v1.0.151
+[1m[92m   Compiling[0m getrandom v0.4.3
+[1m[92m   Compiling[0m phf_codegen v0.13.1
+[1m[92m   Compiling[0m libc v0.2.189
+[1m[92m   Compiling[0m windows-sys v0.61.2
+[1m[92m   Compiling[0m toml_writer v1.1.2+spec-1.1.0
+[1m[92m   Compiling[0m cc v1.4.5
+[1m[92m   Compiling[0m toml_parser v1.1.3+spec-1.1.0
+[1m[92m   Compiling[0m ctor-proc-macro v0.0.7
+[1m[92m   Compiling[0m version_check v0.9.5
+[1m[92m   Compiling[0m dtoa v1.0.11
+[1m[92m   Compiling[0m autocfg v1.5.1
+[1m[92m   Compiling[0m log v0.4.34
+[1m[92m   Compiling[0m percent-encoding v2.3.2
+[1m[92m   Compiling[0m selectors v0.36.1
+[1m[92m   Compiling[0m aho-corasick v1.1.5
+[1m[92m   Compiling[0m tendril v0.5.1
+[1m[92m   Compiling[0m unic-char-range v0.9.0
+[1m[92m   Compiling[0m regex-syntax v0.8.11
+[1m[92m   Compiling[0m dtoa-short v0.3.5
+[1m[92m   Compiling[0m unic-common v0.9.0
+[1m[92m   Compiling[0m indexmap v1.9.3
+[1m[92m   Compiling[0m windows-link v0.1.3
+[1m[92m   Compiling[0m form_urlencoded v1.2.2
+[1m[92m   Compiling[0m alloc-no-stdlib v2.0.4
+[1m[92m   Compiling[0m byteorder v1.5.0
+[1m[92m   Compiling[0m camino v1.2.5
+[1m[92m   Compiling[0m winapi-util v0.1.11
+[1m[92m   Compiling[0m unic-char-property v0.9.0
+[1m[92m   Compiling[0m unic-ucd-version v0.9.0
+[1m[92m   Compiling[0m servo_arc v0.4.3
+[1m[92m   Compiling[0m alloc-stdlib v0.2.4
+[1m[92m   Compiling[0m rustc-hash v2.1.3
+[1m[92m   Compiling[0m hashbrown v0.17.1
+[1m[92m   Compiling[0m bitflags v2.13.2
+[1m[92m   Compiling[0m hashbrown v0.12.3
+[1m[92m   Compiling[0m parking_lot v0.12.5
+[1m[92m   Compiling[0m bit-vec v0.8.0
+[1m[92m   Compiling[0m powerfmt v0.2.0
+[1m[92m   Compiling[0m equivalent v1.0.2
+[1m[92m   Compiling[0m deranged v0.5.8
+[1m[92m   Compiling[0m fnv v1.0.7
+[1m[92m   Compiling[0m regex-automata v0.4.18
+[1m[92m   Compiling[0m serde_spanned v1.1.1
+[1m[92m   Compiling[0m semver v1.0.28
+[1m[92m   Compiling[0m toml_datetime v1.1.1+spec-1.1.0
+[1m[92m   Compiling[0m uuid v1.26.1
+[1m[92m   Compiling[0m schemars v0.8.22
+[1m[92m   Compiling[0m brotli-decompressor v5.0.3
+[1m[92m   Compiling[0m same-file v1.0.6
+[1m[92m   Compiling[0m unic-ucd-ident v0.9.0
+[1m[92m   Compiling[0m indexmap v2.14.2
+[1m[92m   Compiling[0m quick-xml v0.42.0
+[1m[92m   Compiling[0m bit-set v0.8.0
+[1m[92m   Compiling[0m string_cache v0.9.0
+[1m[92m   Compiling[0m bytes v1.12.1
+[1m[92m   Compiling[0m time v0.3.55
+[1m[92m   Compiling[0m dyn-clone v1.0.20
+[1m[92m   Compiling[0m syn v2.0.119
+[1m[92m   Compiling[0m syn v3.0.5
+[1m[92m   Compiling[0m string_cache_codegen v0.6.1
+[1m[92m   Compiling[0m toml v1.1.6+spec-1.1.0
+[1m[92m   Compiling[0m cfb v0.7.3
+[1m[92m   Compiling[0m foldhash v0.2.0
+[1m[92m   Compiling[0m dunce v1.0.5
+[1m[92m   Compiling[0m base64 v0.23.1
+[1m[92m   Compiling[0m brotli v8.0.4
+[1m[92m   Compiling[0m regex v1.13.1
+[1m[92m   Compiling[0m serde-untagged v0.1.9
+[1m[92m   Compiling[0m walkdir v2.5.0
+[1m[92m   Compiling[0m windows-result v0.3.4
+[1m[92m   Compiling[0m windows-strings v0.4.2
+[1m[92m   Compiling[0m vswhom-sys v0.1.3
+[1m[92m   Compiling[0m ctor v0.8.0
+[1m[92m   Compiling[0m web_atoms v0.2.6
+[1m[92m   Compiling[0m http v1.5.0
+[1m[92m   Compiling[0m synstructure v0.13.2
+[1m[92m   Compiling[0m phf_macros v0.13.1
+[1m[92m   Compiling[0m zerovec-derive v0.11.6
+[1m[92m   Compiling[0m displaydoc v0.2.7
+[1m[92m   Compiling[0m serde_derive v1.0.229
+[1m[92m   Compiling[0m thiserror-impl v2.0.20
+[1m[92m   Compiling[0m darling_core v0.24.1
+[1m[92m   Compiling[0m thiserror-impl v1.0.69
+[1m[92m   Compiling[0m derive_more-impl v2.1.1
+[1m[92m   Compiling[0m cssparser-macros v0.6.1
+[1m[92m   Compiling[0m serde_derive_internals v0.29.1
+[1m[92m   Compiling[0m windows-interface v0.59.3
+[1m[92m   Compiling[0m windows-implement v0.60.2
+[1m[92m   Compiling[0m glob v0.3.4
+[1m[92m   Compiling[0m crossbeam-utils v0.8.23
+[1m[92m   Compiling[0m infer v0.19.0
+[1m[92m   Compiling[0m windows-targets v0.52.6
+[1m[92m   Compiling[0m rustc_version v0.4.1
+[1m[92m   Compiling[0m toml_datetime v0.7.5+spec-1.1.0
+[1m[92m   Compiling[0m windows-threading v0.1.0
+[1m[92m   Compiling[0m zerofrom-derive v0.1.7
+[1m[92m   Compiling[0m yoke-derive v0.8.2
+[1m[92m   Compiling[0m generic-array v0.14.7
+[1m[92m   Compiling[0m phf v0.13.1
+[1m[92m   Compiling[0m windows-core v0.61.2
+[1m[92m   Compiling[0m schemars_derive v0.8.22
+[1m[92m   Compiling[0m derive_more v2.1.1
+[1m[92m   Compiling[0m darling_macro v0.24.1
+[1m[92m   Compiling[0m windows-sys v0.59.0
+[1m[92m   Compiling[0m winnow v0.7.15
+[1m[92m   Compiling[0m simd-adler32 v0.3.10
+[1m[92m   Compiling[0m option-ext v0.2.0
+[1m[92m   Compiling[0m time-macros v0.2.32
+[1m[92m   Compiling[0m dirs-sys v0.5.0
+[1m[92m   Compiling[0m heck v0.5.0
+[1m[92m   Compiling[0m adler2 v2.0.1
+[1m[92m   Compiling[0m typenum v1.20.1
+[1m[92m   Compiling[0m cssparser v0.36.0
+[1m[92m   Compiling[0m darling v0.24.1
+[1m[92m   Compiling[0m crc32fast v1.5.1
+[1m[92m   Compiling[0m windows-future v0.2.1
+[1m[92m   Compiling[0m windows-collections v0.2.0
+[1m[92m   Compiling[0m zerofrom v0.1.8
+[1m[92m   Compiling[0m windows-numerics v0.2.0
+[1m[92m   Compiling[0m webview2-com-sys v0.38.2
+[1m[92m   Compiling[0m dirs v6.0.0
+[1m[92m   Compiling[0m vswhom v0.1.0
+[1m[92m   Compiling[0m toml v0.9.12+spec-1.1.0
+[1m[92m   Compiling[0m jsonptr v0.6.3
+[1m[92m   Compiling[0m cargo-platform v0.1.9
+[1m[92m   Compiling[0m plist v1.10.1
+[1m[92m   Compiling[0m raw-window-handle v0.6.2
+[1m[92m   Compiling[0m rustversion v1.0.23
+[1m[92m   Compiling[0m cargo_metadata v0.19.2
+[1m[92m   Compiling[0m windows v0.61.3
+[1m[92m   Compiling[0m serde_with_macros v3.23.0
+[1m[92m   Compiling[0m once_cell v1.21.4
+[1m[92m   Compiling[0m yoke v0.8.3
+[1m[92m   Compiling[0m json-patch v3.0.1
+[1m[92m   Compiling[0m markup5ever v0.38.0
+[1m[92m   Compiling[0m cargo_toml v0.22.3
+[1m[92m   Compiling[0m winreg v0.55.0
+[1m[92m   Compiling[0m miniz_oxide v0.9.1
+[1m[92m   Compiling[0m zerovec v0.11.8
+[1m[92m   Compiling[0m zerotrie v0.2.5
+[1m[92m   Compiling[0m dpi v0.1.2
+[1m[92m   Compiling[0m cookie v0.18.2
+[1m[92m   Compiling[0m html5ever v0.38.0
+[1m[92m   Compiling[0m embed-resource v3.0.11
+[1m[92m   Compiling[0m serde_with v3.23.0
+[1m[92m   Compiling[0m tauri-winres v0.3.6
+[1m[92m   Compiling[0m flate2 v1.1.10
+[1m[92m   Compiling[0m crypto-common v0.1.7
+[1m[92m   Compiling[0m block-buffer v0.10.4
+[1m[92m   Compiling[0m miniz_oxide v0.8.9
+[1m[92m   Compiling[0m tinystr v0.8.4
+[1m[92m   Compiling[0m potential_utf v0.1.6
+[1m[92m   Compiling[0m dom_query v0.27.0
+[1m[92m   Compiling[0m fdeflate v0.3.7
+[1m[92m   Compiling[0m webview2-com-macros v0.8.1
+[1m[92m   Compiling[0m icu_locale_core v2.3.0
+[1m[92m   Compiling[0m icu_collections v2.3.0
+[1m[92m   Compiling[0m ring v0.17.14
+[1m[92m   Compiling[0m windows-version v0.1.7
+[1m[92m   Compiling[0m pin-project-lite v0.2.17
+[1m[92m   Compiling[0m crossbeam-epoch v0.9.21
+[1m[92m   Compiling[0m unicode-segmentation v1.13.3
+[1m[92m   Compiling[0m bitflags v1.3.2
+[1m[92m   Compiling[0m zeroize v1.8.1
+[1m[92m   Compiling[0m png v0.17.16
+[1m[92m   Compiling[0m rustls-pki-types v1.15.1
+[1m[92m   Compiling[0m icu_provider v2.3.1
+[1m[92m   Compiling[0m digest v0.10.7
+[1m[92m   Compiling[0m crossbeam-channel v0.5.17
+[1m[92m   Compiling[0m tauri-runtime v2.11.3
+[1m[92m   Compiling[0m icu_normalizer v2.3.0
+[1m[92m   Compiling[0m icu_properties v2.3.0
+[1m[92m   Compiling[0m crossbeam-deque v0.8.8
+[1m[92m   Compiling[0m tracing-core v0.1.36
+[1m[92m   Compiling[0m cpufeatures v0.2.17
+[1m[92m   Compiling[0m wry v0.55.1
+[1m[92m   Compiling[0m sha2 v0.10.9
+[1m[92m   Compiling[0m tracing v0.1.44
+[1m[92m   Compiling[0m ico v0.5.0
+[1m[92m   Compiling[0m getrandom v0.2.17
+[1m[92m   Compiling[0m rayon-core v1.13.0
+[1m[92m   Compiling[0m tauri-runtime-wry v2.11.4
+[1m[92m   Compiling[0m winapi v0.3.9
+[1m[92m   Compiling[0m getrandom v0.3.4
+[1m[92m   Compiling[0m untrusted v0.9.0
+[1m[92m   Compiling[0m base64 v0.22.1
+[1m[92m   Compiling[0m idna_adapter v1.2.2
+[1m[92m   Compiling[0m idna v1.1.0
+[1m[92m   Compiling[0m softbuffer v0.4.8
+[1m[92m   Compiling[0m keyboard-types v0.7.0
+[1m[92m   Compiling[0m multiversion-macros v0.9.0
+[1m[92m   Compiling[0m encoding_rs v0.8.41
+[1m[92m   Compiling[0m windows-result v0.1.2
+[1m[92m   Compiling[0m windows-interface v0.57.0
+[1m[92m   Compiling[0m serialize-to-javascript-impl v0.1.2
+[1m[92m   Compiling[0m windows-implement v0.57.0
+[1m[92m   Compiling[0m ntapi v0.4.3
+[1m[92m   Compiling[0m url v2.5.8
+[1m[92m   Compiling[0m rustls v0.23.45
+[1m[92m   Compiling[0m webpki-roots v1.0.9
+[1m[92m   Compiling[0m tokio v1.53.1
+[1m[92m   Compiling[0m serde_repr v0.1.21
+[1m[92m   Compiling[0m either v1.18.0
+[1m[92m   Compiling[0m muda v0.19.3
+[1m[92m   Compiling[0m window-vibrancy v0.6.0
+[1m[92m   Compiling[0m multiversion v0.9.0
+[1m[92m   Compiling[0m simdutf8 v0.1.5
+[1m[92m   Compiling[0m subtle v2.6.1
+[1m[92m   Compiling[0m serialize-to-javascript v0.1.2
+[1m[92m   Compiling[0m urlpattern v0.3.0
+[1m[92m   Compiling[0m windows-core v0.57.0
+[1m[92m   Compiling[0m core_detect v1.0.0
+[1m[92m   Compiling[0m multiversion_no_op v1.0.0
+[1m[92m   Compiling[0m mime v0.3.17
+[1m[92m   Compiling[0m rayon v1.12.0
+[1m[92m   Compiling[0m webpki-roots v0.26.11
+[1m[92m   Compiling[0m open v5.4.4
+[1m[92m   Compiling[0m os_pipe v1.2.3
+[1m[92m   Compiling[0m shared_child v1.1.2
+[1m[92m   Compiling[0m rustls-webpki v0.103.15
+[1m[92m   Compiling[0m tauri-utils v2.9.3
+[1m[92m   Compiling[0m windows v0.57.0
+[1m[92m   Compiling[0m ureq v2.12.1
+[1m[92m   Compiling[0m tauri-build v2.6.3
+[1m[92m   Compiling[0m tauri-plugin v2.6.3
+[1m[92m   Compiling[0m tauri-codegen v2.6.3
+[1m[92m   Compiling[0m tauri v2.11.5
+[1m[92m   Compiling[0m tauri-plugin-shell v2.3.6
+[1m[92m   Compiling[0m tauri-macros v2.6.3
+[1m[92m   Compiling[0m smartcaja v2.0.1 (C:\Users\Oscar\SmartCaja-CCS\desktop\src-tauri)
+[1m[92m   Compiling[0m tao v0.35.3
+[1m[92m   Compiling[0m webview2-com v0.38.2
+[1m[92m   Compiling[0m sysinfo v0.33.1
+[1m[92m    Finished[0m `release` profile [optimized] target(s) in 6m 57s
+       Built [tauri_cli::build] application at: C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\smartcaja.exe
+        Info [tauri_bundler::bundle] Patching C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\smartcaja.exe with bundle type information: msi
+        Info [tauri_bundler::bundle::windows::msi] Target: x64
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("upgrade_code")], "upgrade_code")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version")], "version")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("allow_downgrades"), value: Context(Bool(true), ["allow_downgrades"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("banner_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("dialog_image_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("license"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("icon_path")], "icon_path")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("homepage"), value: Context(Null, ["homepage"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "unless", params: [PathAndJson { relative_path: Some("license"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("path_component_guid")], "path_component_guid")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_path")], "main_binary_path")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Array [Object {"guid": String("22fbe1d4-7711-4f82-88a5-07fed748cf7f"), "id": String("backend.exe"), "path": String("C:\\Users\\Oscar\\AppData\\Local\\Temp\\backend.exe")}], ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bin"), Named("id")], "bin.id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bin"), Named("guid")], "bin.guid")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bin"), Named("id")], "bin.id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bin"), Named("path")], "bin.path")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("resources")], "resources")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bundle_id")], "bundle_id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("merge_modules"), value: Context(Array [], ["merge_modules"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resource_file_ids"), value: Context(Array [], ["resource_file_ids"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Array [Object {"guid": String("22fbe1d4-7711-4f82-88a5-07fed748cf7f"), "id": String("backend.exe"), "path": String("C:\\Users\\Oscar\\AppData\\Local\\Temp\\backend.exe")}], ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bin"), Named("id")], "bin.id")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("component_group_refs"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("component_refs"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("feature_group_refs"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("feature_refs"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("merge_refs"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("install_webview"), value: Context(Bool(true), ["install_webview"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("download_bootstrapper"), value: Context(Bool(true), ["download_bootstrapper"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview_installer_args")], "webview_installer_args")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("webview2_bootstrapper_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("webview2_installer_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("minimum_webview2_version"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+     Running [tauri_bundler::bundle::windows::msi] candle for "C:\\Users\\Oscar\\AppData\\Local\\Temp\\cursor-sandbox-cache\\6aa219041f27a1ca6710bd48715e63c4\\cargo-target\\release\\wix\\x64\\main.wxs"
+     Running [tauri_bundler::utils] Command `C:\Users\Oscar\AppData\Local\tauri\WixTools314\candle.exe  -arch x64 C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\main.wxs -dSourceDir=C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\smartcaja.exe`
+Windows Installer XML Toolset Compiler version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+main.wxs
+     Running [tauri_bundler::bundle::windows::msi] light to produce C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\bundle\msi\SmartCaja_2.0.1_x64_en-US.msi
+     Running [tauri_bundler::utils] Command `C:\Users\Oscar\AppData\Local\tauri\WixTools314\light.exe  -ext C:\Users\Oscar\AppData\Local\tauri\WixTools314\WixUIExtension.dll -ext C:\Users\Oscar\AppData\Local\tauri\WixTools314\WixUtilExtension.dll -o C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\output.msi -cultures:en-us -loc C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\locale.wxl *.wixobj`
+Windows Installer XML Toolset Linker version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\main.wxs(202) : warning LGHT1076 : ICE03: String overflow (greater than length permitted in column); Table: CustomAction, Column: Target, Key(s): DownloadAndInvokeBootstrapper
+C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\main.wxs(33) : warning LGHT1076 : ICE40: REINSTALLMODE is defined in the Property table. This may cause difficulties.
+C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\main.wxs(123) : warning LGHT1076 : ICE57: Component 'CMP_UninstallShortcut' has both per-user and per-machine data with an HKCU Registry KeyPath.
+C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\wix\x64\main.wxs(40) : warning LGHT1076 : ICE61: This product should remove only older versions of itself. No Maximum version was detected for the current product. (WIX_UPGRADE_DETECTED)
+        Info [tauri_bundler::bundle] Patching C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\smartcaja.exe with bundle type information: nsis
+        Info [tauri_bundler::bundle::windows::nsis] Target: x64
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("compression")], "compression")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("compression")], "compression")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("signed_plugins_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("installer_hooks"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version")], "version")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version_with_build")], "version_with_build")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("homepage")], "homepage")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("install_mode")], "install_mode")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("license")], "license")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("installer_icon")], "installer_icon")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("sidebar_image")], "sidebar_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("header_image")], "header_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_icon")], "uninstaller_icon")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_header_image")], "uninstaller_header_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_name")], "main_binary_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_path")], "main_binary_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bundle_id")], "bundle_id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("copyright")], "copyright")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("out_file")], "out_file")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("arch")], "arch")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("additional_plugins_path")], "additional_plugins_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("allow_downgrades")], "allow_downgrades")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("display_language_selector")], "display_language_selector")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("install_webview2_mode")], "install_webview2_mode")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_installer_args")], "webview2_installer_args")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_bootstrapper_path")], "webview2_bootstrapper_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_installer_path")], "webview2_installer_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("minimum_webview2_version")], "minimum_webview2_version")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_sign_cmd")], "uninstaller_sign_cmd")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("estimated_size")], "estimated_size")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("start_menu_folder")], "start_menu_folder")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("languages"), value: Context(Array [String("English")], ["languages"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("language_files"), value: Context(Array [String("C:\\Users\\Oscar\\AppData\\Local\\Temp\\cursor-sandbox-cache\\6aa219041f27a1ca6710bd48715e63c4\\cargo-target\\release\\nsis\\x64\\English.nsh")], ["language_files"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources_dirs"), value: Context(Array [], ["resources_dirs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources"), value: Context(Object {}, ["resources"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Object {"C:\\Users\\Oscar\\SmartCaja-CCS\\desktop\\src-tauri\\binaries\\backend-x86_64-pc-windows-msvc.exe": String("backend.exe")}, ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\Oscar\\SmartCaja-CCS\\desktop\\src-tauri\\binaries\\backend-x86_64-pc-windows-msvc.exe")) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources"), value: Context(Object {}, ["resources"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Object {"C:\\Users\\Oscar\\SmartCaja-CCS\\desktop\\src-tauri\\binaries\\backend-x86_64-pc-windows-msvc.exe": String("backend.exe")}, ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources_ancestors"), value: Context(Array [], ["resources_ancestors"]) }], hash: {}
+     Running [tauri_bundler::bundle::windows::nsis] makensis to produce C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\bundle\nsis\SmartCaja_2.0.1_x64-setup.exe
+     Running [tauri_bundler::utils] Command `C:\Users\Oscar\AppData\Local\tauri\NSIS\makensis.exe  -INPUTCHARSET UTF8 -OUTPUTCHARSET UTF8 -V4 C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\nsis\x64\installer.nsi`
+MakeNSIS v3.13 - Copyright 1999-2026 Contributors
+See the file COPYING for license details.
+Credits can be found in the Users Manual.
+
+Processing config: C:\Users\Oscar\AppData\Local\tauri\NSIS\nsisconf.nsh
+Processing default plugins: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+ + AdvSplash::show
+ + Banner::destroy
+ + Banner::getWindow
+ + Banner::show
+ + BgImage::AddImage
+ + BgImage::AddText
+ + BgImage::Clear
+ + BgImage::Destroy
+ + BgImage::Redraw
+ + BgImage::SetBg
+ + BgImage::SetReturn
+ + BgImage::Sound
+ + Dialer::AttemptConnect
+ + Dialer::AutodialHangup
+ + Dialer::AutodialOnline
+ + Dialer::AutodialUnattended
+ + Dialer::GetConnectedState
+ + InstallOptions::dialog
+ + InstallOptions::initDialog
+ + InstallOptions::make_unicode
+ + InstallOptions::show
+ + LangDLL::LangDialog
+ + Math::Script
+ + NSISdl::download
+ + NSISdl::download_quiet
+ + Splash::show
+ + StartMenu::Init
+ + StartMenu::Select
+ + StartMenu::Show
+ + System::Alloc
+ + System::Call
+ + System::Copy
+ + System::Free
+ + System::Get
+ + System::Int64Op
+ + System::Store
+ + System::StrAlloc
+ + TypeLib::GetLibVersion
+ + TypeLib::Register
+ + TypeLib::UnRegister
+ + UserInfo::GetAccountType
+ + UserInfo::GetName
+ + UserInfo::GetOriginalAccountType
+ + VPatch::GetFileCRC32
+ + VPatch::GetFileMD5
+ + VPatch::vpatchfile
+ + nsDialogs::Create
+ + nsDialogs::CreateControl
+ + nsDialogs::CreateItem
+ + nsDialogs::CreateTimer
+ + nsDialogs::GetUserData
+ + nsDialogs::KillTimer
+ + nsDialogs::OnBack
+ + nsDialogs::OnChange
+ + nsDialogs::OnClick
+ + nsDialogs::OnNotify
+ + nsDialogs::SelectFileDialog
+ + nsDialogs::SelectFolderDialog
+ + nsDialogs::SetRTL
+ + nsDialogs::SetUserData
+ + nsDialogs::Show
+ + nsExec::Exec
+ + nsExec::ExecToLog
+ + nsExec::ExecToStack
+
+!define: "MUI_INSERT_NSISCONF"=""
+
+Changing directory to: "C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\nsis\x64"
+
+Processing script file: "C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\nsis\x64\installer.nsi" (UTF8)
+Unicode: true
+Processing default plugins: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+
+SetCompressor: /SOLID lzma
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\MUI2.nsh" (UTF8)
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Contrib\Modern UI 2\MUI2.nsh" (UTF8)
+NSIS Modern User Interface version 2.1 - Copyright 2002-2026 Joost Verburg (C:\Users\Oscar\AppData\Local\tauri\NSIS\Contrib\Modern UI 2\MUI2.nsh:14)
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Contrib\Modern UI 2\MUI2.nsh"
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\MUI2.nsh"
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\FileFunc.nsh" (UTF8)
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\FileFunc.nsh"
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\x64.nsh" (UTF8)
+!define: "___X64__NSH___"=""
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\LogicLib.nsh" (UTF8)
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\LogicLib.nsh"
+!define: "IsWow64"=""" IsWow64 """
+!define: "RunningX64"=""" RunningX64 """
+!define: "GetNativeMachineArchitecture"="!insertmacro GetNativeMachineArchitecture "
+!define: "IsNativeMachineArchitecture"=""" IsNativeMachineArchitecture "
+!define: "IsNativeIA32"=""" IsNativeMachineArchitecture  332"
+!define: "IsNativeAMD64"=""" IsNativeMachineArchitecture  34404"
+!define: "IsNativeARM64"=""" IsNativeMachineArchitecture  43620"
+!define: "DisableX64FSRedirection"="!insertmacro DisableX64FSRedirection"
+!define: "EnableX64FSRedirection"="!insertmacro EnableX64FSRedirection"
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\x64.nsh"
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\WordFunc.nsh" (UTF8)
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\WordFunc.nsh"
+!include: "utils.nsh" (UTF8)
+!define: "MAX_PATH"="260"
+!define: "SLGP_RAWPATH"="0x4"
+!include: closed: "utils.nsh"
+!include: "FileAssociation.nsh" (UTF8)
+!define: "SHCNE_ASSOCCHANGED"="0x08000000"
+!define: "SHCNF_FLUSH"="0x1000"
+!include: closed: "FileAssociation.nsh"
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\Win\COM.nsh" (UTF8)
+!define: "__WIN_COM__INC"="2"
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\Win\COM.nsh"
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\Win\Propkey.nsh" (UTF8)
+!define: "__WIN_PROPKEY__INC"=""
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\Win\Propkey.nsh"
+!include: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\StrFunc.nsh" (UTF8)
+!include: closed: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Include\StrFunc.nsh"
+!insertmacro: STRFUNC_MAKEFUNC
+!insertmacro: STRFUNC_MAKEFUNC_StrCase
+!insertmacro: STRFUNC_BEGINFUNC
+!define: "StrCase_INCLUDED"=""
+!define: "StrCase"="!insertmacro STRFUNC_CALL_StrCase "" "
+Function: "StrCase"
+!insertmacro: end of STRFUNC_BEGINFUNC
+Exch($1,0)
+Exch(st(1),0)
+Exch($0,0)
+Exch(st(1),0)
+Push: $2
+Push: $3
+Push: $4
+Push: $5
+Push: $6
+Push: $7
+Push: $8
+StrCpy $2 "" () ()
+StrCpy $3 "" () ()
+StrCpy $4 "" () ()
+StrCpy $5 "" () ()
+StrCpy $6 "" () ()
+StrCpy $7 "" () ()
+StrCpy $8 "" () ()
+!insertmacro: _If
+!insertmacro: end of _If
+File: "System.dll"->"$PLUGINSDIR\System.dll" 12288 bytes
+Plugin command: Call User32::CharUpper(t r0 r5)i
+Goto: StrCase_End
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+Plugin command: Call User32::CharLower(t r0 r5)i
+Goto: StrCase_End
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrLen $2 "$0"
+!insertmacro: _For
+!insertmacro: end of _For
+IntOp: $4=$3+1
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $6 "$0" () ($3)
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $6 "$0" (1) ()
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $6 "$6" (1) ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call *(&t1 r7) p .r8
+Plugin command: Call *$8(&i1 .r7)
+Plugin command: Free $8
+Plugin command: Call user32::IsCharAlpha(i r7) i .r8
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call User32::CharUpper(t r6 r6)i
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Call User32::CharLower(t r6 r6)i
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Goto: IgnoreLetter
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: _Or
+!insertmacro: end of _Or
+Plugin command: Call User32::CharUpper(t r6 r6)i
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Call User32::CharLower(t r6 r6)i
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+Plugin command: Call *(&t1 r6) p .r8
+Plugin command: Call *$8(&i1 .r7)
+Plugin command: Free $8
+Plugin command: Call user32::IsCharUpper(i r7) i .r8
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call User32::CharUpper(t r6 r6)i
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Call User32::CharLower(t r6 r6)i
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrCpy $7 "$6" () ()
+StrCpy $5 "$5$6" () ()
+!insertmacro: _Loop
+!insertmacro: end of _Loop
+StrCpy $0 "$5" () ()
+Pop: $8
+Pop: $7
+Pop: $6
+Pop: $5
+Pop: $4
+Pop: $3
+Pop: $2
+Pop: $1
+Exch($0,0)
+!insertmacro: STRFUNC_ENDFUNC
+FunctionEnd
+!insertmacro: end of STRFUNC_ENDFUNC
+!insertmacro: end of STRFUNC_MAKEFUNC_StrCase
+!insertmacro: end of STRFUNC_MAKEFUNC
+!insertmacro: STRFUNC_MAKEFUNC
+!insertmacro: STRFUNC_MAKEFUNC_StrLoc
+!insertmacro: STRFUNC_BEGINFUNC
+!define: "StrLoc_INCLUDED"=""
+!define: "StrLoc"="!insertmacro STRFUNC_CALL_StrLoc "" "
+Function: "StrLoc"
+!insertmacro: end of STRFUNC_BEGINFUNC
+Exch($R0,0)
+Exch(st(1),0)
+Exch($R1,0)
+Exch(st(2),0)
+Exch($R2,0)
+Push: $R3
+Push: $R4
+Push: $R5
+Push: $R6
+StrLen $R3 "$R1"
+StrLen $R4 "$R2"
+StrCpy $R5 "0" () ()
+!insertmacro: _Do
+!insertmacro: end of _Do
+StrCpy $R6 "$R2" ($R3) ($R5)
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+IntOp: $R6=$R3+$R5
+IntOp: $R0=$R4-$R6
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $R0 "$R5" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _Goto
+!insertmacro: end of _Goto
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $R0 "" () ()
+!insertmacro: _Goto
+!insertmacro: end of _Goto
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+IntOp: $R5=$R5+1
+!insertmacro: _Loop
+!insertmacro: end of _Loop
+Pop: $R6
+Pop: $R5
+Pop: $R4
+Pop: $R3
+Pop: $R2
+Exch(st(1),0)
+Pop: $R1
+Exch($R0,0)
+!insertmacro: STRFUNC_ENDFUNC
+FunctionEnd
+!insertmacro: end of STRFUNC_ENDFUNC
+!insertmacro: end of STRFUNC_MAKEFUNC_StrLoc
+!insertmacro: end of STRFUNC_MAKEFUNC
+!define: "WEBVIEW2APPGUID"="{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+!define: "MANUFACTURER"="ccs"
+!define: "PRODUCTNAME"="SmartCaja"
+!define: "VERSION"="2.0.1"
+!define: "VERSIONWITHBUILD"="2.0.1.0"
+!define: "HOMEPAGE"=""
+!define: "INSTALLMODE"="currentUser"
+!define: "LICENSE"=""
+!define: "INSTALLERICON"=""
+!define: "SIDEBARIMAGE"=""
+!define: "HEADERIMAGE"=""
+!define: "UNINSTALLERICON"=""
+!define: "UNINSTALLERHEADERIMAGE"=""
+!define: "MAINBINARYNAME"="smartcaja"
+!define: "MAINBINARYSRCPATH"="C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\smartcaja.exe"
+!define: "BUNDLEID"="cl.ccs.smartcaja"
+!define: "COPYRIGHT"=""
+!define: "OUTFILE"="nsis-output.exe"
+!define: "ARCH"="x64"
+!define: "ADDITIONALPLUGINSPATH"="C:\Users\Oscar\AppData\Local\tauri\NSIS\Plugins\x86-unicode\additional"
+!define: "ALLOWDOWNGRADES"="true"
+!define: "DISPLAYLANGUAGESELECTOR"="false"
+!define: "INSTALLWEBVIEW2MODE"="downloadBootstrapper"
+!define: "WEBVIEW2INSTALLERARGS"="/silent"
+!define: "WEBVIEW2BOOTSTRAPPERPATH"=""
+!define: "WEBVIEW2INSTALLERPATH"=""
+!define: "MINIMUMWEBVIEW2VERSION"=""
+!define: "UNINSTKEY"="Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja"
+!define: "MANUKEY"="Software\ccs"
+!define: "MANUPRODUCTKEY"="Software\ccs\SmartCaja"
+!define: "UNINSTALLERSIGNCOMMAND"=""
+!define: "ESTIMATEDSIZE"="36703"
+!define: "STARTMENUFOLDER"=""
+Var: "PassiveMode"
+Var: "UpdateMode"
+Var: "NoShortcutMode"
+Var: "WixMode"
+Var: "OldMainBinaryName"
+Name: "SmartCaja"
+BrandingText: ""
+OutFile: "nsis-output.exe"
+!define: "PLACEHOLDER_INSTALL_DIR"="placeholder\SmartCaja"
+InstallDir: "placeholder\SmartCaja"
+VIAddVersionKey: "ProductName" "SmartCaja"
+VIAddVersionKey: "FileDescription" "SmartCaja"
+VIAddVersionKey: "LegalCopyright" ""
+VIAddVersionKey: "FileVersion" "2.0.1"
+VIAddVersionKey: "ProductVersion" "2.0.1"
+!addplugindir: "C:\Users\Oscar\AppData\Local\tauri\NSIS\Plugins\x86-unicode\additional"
+ + nsis_tauri_utils::DllMain
+ + nsis_tauri_utils::FindProcess
+ + nsis_tauri_utils::FindProcessCurrentUser
+ + nsis_tauri_utils::KillProcess
+ + nsis_tauri_utils::KillProcessCurrentUser
+ + nsis_tauri_utils::RunAsUser
+ + nsis_tauri_utils::SemverCompare
+ + nsis_tauri_utils::StrReplace
+ + nsis_tauri_utils::memcmp
+ + nsis_tauri_utils::memcpy
+ + nsis_tauri_utils::memset
+!define: "MUI_LANGDLL_REGISTRY_ROOT"="HKCU"
+!define: "MUI_LANGDLL_REGISTRY_KEY"="Software\ccs\SmartCaja"
+!define: "MUI_LANGDLL_REGISTRY_VALUENAME"="Installer Language"
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="SkipIfPassive"
+!insertmacro: MUI_PAGE_WELCOME
+!insertmacro: end of MUI_PAGE_WELCOME
+Var: "ReinstallPageCheck"
+Page: custom (creator:PageReinstall) (leave:PageLeaveReinstall)
+Function: "PageReinstall"
+StrCpy $0 "0" () ()
+EnumRegKey $1 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$0
+StrCmp "$1" "" equal=wix_loop_done, nonequal=
+IntOp: $0=$0+1
+ReadRegStr $R0 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1\DisplayName
+ReadRegStr $R1 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1\Publisher
+StrCmp "$R0$R1" "SmartCajaccs" equal=0, nonequal=wix_loop
+ReadRegStr $R0 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1\UninstallString
+!insertmacro: STRFUNC_CALL_StrCase
+!insertmacro: end of STRFUNC_CALL_StrCase
+!insertmacro: STRFUNC_CALL_StrLoc
+!insertmacro: end of STRFUNC_CALL_StrLoc
+StrCmp "$R0" "0" equal=0, nonequal=wix_loop_done
+StrCpy $WixMode "1" () ()
+StrCpy $R6 "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1" () ()
+Goto: compare_version
+ReadRegStr $R0 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\
+ReadRegStr $R1 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\UninstallString
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+StrCpy $R4 "$(older)" () ()
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $R0 HKLM\$R6\DisplayVersion
+!insertmacro: _Else
+!insertmacro: end of _Else
+ReadRegStr $R0 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\DisplayVersion
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+File: "nsis_tauri_utils.dll"->"$PLUGINSDIR\nsis_tauri_utils.dll" 34304 bytes
+Plugin command: SemverCompare 2.0.1 $R0
+Pop: $R0
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $R1 "$(alreadyInstalledLong)" () ()
+StrCpy $R2 "$(addOrReinstall)" () ()
+StrCpy $R3 "$(uninstallApp)" () ()
+!insertmacro: MUI_HEADER_TEXT
+!insertmacro: end of MUI_HEADER_TEXT
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+StrCpy $R1 "$(olderOrUnknownVersionInstalled)" () ()
+StrCpy $R2 "$(uninstallBeforeInstalling)" () ()
+StrCpy $R3 "$(dontUninstall)" () ()
+!insertmacro: MUI_HEADER_TEXT
+!insertmacro: end of MUI_HEADER_TEXT
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+StrCpy $R1 "$(newerVersionInstalled)" () ()
+StrCpy $R2 "$(uninstallBeforeInstalling)" () ()
+StrCpy $R3 "$(dontUninstall)" () ()
+!insertmacro: MUI_HEADER_TEXT
+!insertmacro: end of MUI_HEADER_TEXT
+!insertmacro: _Else
+!insertmacro: end of _Else
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Call "PageLeaveReinstall"
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Create 1018
+Pop: $R4
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+Plugin command: CreateControl STATIC 0x40000000|0x10000000|0x04000000|0x00000100 0x00000020 0 0 100% 24u $R1
+Pop: $R1
+Plugin command: CreateControl BUTTON 0x40000000|0x10000000|0x04000000|0x00010000|0x00000000|0x00000C00|0x00000009|0x00002000 0 30u 50u -30u 8u $R2
+Pop: $R2
+!insertmacro: __NSD_OnControlEvent
+Push: $0
+Push: $1
+StrCpy $1 "$R2" () ()
+GetFunctionAddress: $0 PageReinstallUpdateSelection
+Plugin command: OnClick $1 $0
+Pop: $1
+Pop: $0
+!insertmacro: end of __NSD_OnControlEvent
+Plugin command: CreateControl BUTTON 0x40000000|0x10000000|0x04000000|0x00010000|0x00000000|0x00000C00|0x00000009|0x00002000 0 30u 70u -30u 8u $R3
+Pop: $R3
+!insertmacro: __NSD_OnControlEvent
+Push: $0
+Push: $1
+StrCpy $1 "$R3" () ()
+GetFunctionAddress: $0 PageReinstallUpdateSelection
+Plugin command: OnClick $1 $0
+Pop: $1
+Pop: $0
+!insertmacro: end of __NSD_OnControlEvent
+!insertmacro: _If
+!insertmacro: end of _If
+SendMessage:($R2,0x00F1,1,0)
+!insertmacro: _Else
+!insertmacro: end of _Else
+SendMessage:($R3,0x00F1,1,0)
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: __NSD_SetFocus
+Plugin command: Call user32::SetFocus(p$R2)
+!insertmacro: end of __NSD_SetFocus
+Plugin command: Show
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "PageReinstallUpdateSelection"
+!insertmacro: __NSD_GetState
+SendMessage:(->$R1)($R2,0x00F0,0,0)
+!insertmacro: end of __NSD_GetState
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $ReinstallPageCheck "1" () ()
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $ReinstallPageCheck "2" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "PageLeaveReinstall"
+!insertmacro: __NSD_GetState
+SendMessage:(->$R1)($R2,0x00F0,0,0)
+!insertmacro: end of __NSD_GetState
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_uninstall
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_done
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_done
+!insertmacro: _Else
+!insertmacro: end of _Else
+Goto: reinst_uninstall
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_uninstall
+!insertmacro: _Else
+!insertmacro: end of _Else
+Goto: reinst_done
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_uninstall
+!insertmacro: _Else
+!insertmacro: end of _Else
+Goto: reinst_done
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+HideWindow
+ClearErrors: 
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $R1 HKLM\$R6\UninstallString
+ExecWait: "$R1" (->$0)
+!insertmacro: _Else
+!insertmacro: end of _Else
+ReadRegStr $4 SHCTX\Software\ccs\SmartCaja\
+ReadRegStr $R1 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\UninstallString
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+StrCpy $R1 "$R1 _?=$4" () ()
+ExecWait: "$R1" (->$0)
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+BringToFront
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+MessageBox: 48: "$(unableToUninstall)"
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="SkipIfPassive"
+!insertmacro: MUI_PAGE_DIRECTORY
+!insertmacro: end of MUI_PAGE_DIRECTORY
+Var: "AppStartMenuFolder"
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="Skip"
+!insertmacro: MUI_PAGE_STARTMENU
+!insertmacro: end of MUI_PAGE_STARTMENU
+!insertmacro: MUI_PAGE_INSTFILES
+!insertmacro: end of MUI_PAGE_INSTFILES
+!define: "MUI_FINISHPAGE_NOAUTOCLOSE"=""
+!define: "MUI_FINISHPAGE_SHOWREADME"=""
+!define: "MUI_FINISHPAGE_SHOWREADME_TEXT"="$(createDesktop)"
+!define: "MUI_FINISHPAGE_SHOWREADME_FUNCTION"="CreateOrUpdateDesktopShortcut"
+!define: "MUI_FINISHPAGE_RUN"=""
+!define: "MUI_FINISHPAGE_RUN_FUNCTION"="RunMainBinary"
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="SkipIfPassive"
+!insertmacro: MUI_PAGE_FINISH
+!insertmacro: end of MUI_PAGE_FINISH
+Function: "RunMainBinary"
+Plugin command: RunAsUser $INSTDIR\smartcaja.exe 
+FunctionEnd
+Var: "DeleteAppDataCheckbox"
+Var: "DeleteAppDataCheckboxState"
+!define: "WS_EX_LAYOUTRTL"="0x00400000"
+!define: "MUI_PAGE_CUSTOMFUNCTION_SHOW"="un.ConfirmShow"
+Function: "un.ConfirmShow"
+FindWindow: output=$1, class="#32770", text="" hwndparent="$HWNDPARENT" hwndafter=""
+File: "System.dll"->"$PLUGINSDIR\System.dll" 12288 bytes
+Plugin command: Call user32::GetDpiForWindow(p r1) i .r2
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "0 | 0x00400000" () ()
+IntOp: $4=50*$2
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $3 "0" () ()
+IntOp: $4=0*$2
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+IntOp: $5=100*$2
+IntOp: $6=400*$2
+IntOp: $7=25*$2
+IntOp: $4=$4/96
+IntOp: $5=$5/96
+IntOp: $6=$6/96
+IntOp: $7=$7/96
+Plugin command: Call user32::CreateWindowEx(i r3, w "BUTTON", w "$(deleteAppData)", i 0x40000000|0x10000000|0x04000000|0x00010000|0x00000000|0x00000C00|0x00000003|0x00002000, i r4, i r5, i r6, i r7, p r1, i0, i0, i0) i .s
+Pop: $DeleteAppDataCheckbox
+SendMessage:(->$1)($HWNDPARENT,0x0031,0,0)
+SendMessage:($DeleteAppDataCheckbox,0x0030,$1,1)
+FunctionEnd
+!define: "MUI_PAGE_CUSTOMFUNCTION_LEAVE"="un.ConfirmLeave"
+Function: "un.ConfirmLeave"
+SendMessage:(->$DeleteAppDataCheckboxState)($DeleteAppDataCheckbox,0x00F0,0,0)
+FunctionEnd
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="un.SkipIfPassive"
+!insertmacro: MUI_UNPAGE_CONFIRM
+!insertmacro: end of MUI_UNPAGE_CONFIRM
+!insertmacro: MUI_UNPAGE_INSTFILES
+!insertmacro: end of MUI_UNPAGE_INSTFILES
+!insertmacro: MUI_LANGUAGE
+!insertmacro: end of MUI_LANGUAGE
+!insertmacro: MUI_RESERVEFILE_LANGDLL
+!insertmacro: end of MUI_RESERVEFILE_LANGDLL
+!include: "C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\nsis\x64\English.nsh" (UTF8)
+LangString: "addOrReinstall" 1033 "Add/Reinstall components"
+LangString: "alreadyInstalled" 1033 "Already Installed"
+LangString: "alreadyInstalledLong" 1033 "SmartCaja 2.0.1 is already installed. Select the operation you want to perform and click Next to continue."
+LangString: "appRunning" 1033 "{{product_name}} is running! Please close it first then try again."
+LangString: "appRunningOkKill" 1033 "{{product_name}} is running!
+Click OK to kill it"
+LangString: "chooseMaintenanceOption" 1033 "Choose the maintenance option to perform."
+LangString: "choowHowToInstall" 1033 "Choose how you want to install SmartCaja."
+LangString: "createDesktop" 1033 "Create desktop shortcut"
+LangString: "dontUninstall" 1033 "Do not uninstall"
+LangString: "dontUninstallDowngrade" 1033 "Do not uninstall (Downgrading without uninstall is disabled for this installer)"
+LangString: "failedToKillApp" 1033 "Failed to kill {{product_name}}. Please close it first then try again"
+LangString: "installingWebview2" 1033 "Installing WebView2..."
+LangString: "newerVersionInstalled" 1033 "A newer version of SmartCaja is already installed! It is not recommended that you install an older version. If you really want to install this older version, it's better to uninstall the current version first. Select the operation you want to perform and click Next to continue."
+LangString: "older" 1033 "older"
+LangString: "olderOrUnknownVersionInstalled" 1033 "An $R4 version of SmartCaja is installed on your system. It's recommended that you uninstall the current version before installing. Select the operation you want to perform and click Next to continue."
+LangString: "silentDowngrades" 1033 "Downgrades are disabled for this installer, can't proceed with the silent installer, please use the graphical interface installer instead.
+"
+LangString: "unableToUninstall" 1033 "Unable to uninstall!"
+LangString: "uninstallApp" 1033 "Uninstall SmartCaja"
+LangString: "uninstallBeforeInstalling" 1033 "Uninstall before installing"
+LangString: "unknown" 1033 "unknown"
+LangString: "webview2AbortError" 1033 "Failed to install WebView2! The app can't run without it. Try restarting the installer."
+LangString: "webview2DownloadError" 1033 "Error: Downloading WebView2 Failed - $0"
+LangString: "webview2DownloadSuccess" 1033 "WebView2 bootstrapper downloaded successfully"
+LangString: "webview2Downloading" 1033 "Downloading WebView2 bootstrapper..."
+LangString: "webview2InstallError" 1033 "Error: Installing WebView2 failed with exit code $1"
+LangString: "webview2InstallSuccess" 1033 "WebView2 installed successfully"
+LangString: "deleteAppData" 1033 "Delete the application data"
+!include: closed: "C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\nsis\x64\English.nsh"
+Function: ".onInit"
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $PassiveMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $NoShortcutMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $UpdateMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: SetContext
+SetShellVarContext: current
+!insertmacro: _If
+!insertmacro: end of _If
+SetRegView: 64
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetContext
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $INSTDIR "$LOCALAPPDATA\SmartCaja" () ()
+Call "RestorePreviousInstallLocation"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Section: "EarlyChecks"
+SectionEnd
+Section: "WebView2"
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $4 HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\pv
+!insertmacro: _Else
+!insertmacro: end of _Else
+ReadRegStr $4 HKLM\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\pv
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $4 HKCU\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\pv
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+Delete: "$TEMP\MicrosoftEdgeWebview2Setup.exe"
+DetailPrint: "$(webview2Downloading)"
+File: "NSISdl.dll"->"$PLUGINSDIR\NSISdl.dll" 15360 bytes
+Plugin command: download https://go.microsoft.com/fwlink/p/?LinkId=2124703 $TEMP\MicrosoftEdgeWebview2Setup.exe
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+DetailPrint: "$(webview2DownloadSuccess)"
+!insertmacro: _Else
+!insertmacro: end of _Else
+DetailPrint: "$(webview2DownloadError)"
+Abort: "$(webview2AbortError)"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrCpy $6 "$TEMP\MicrosoftEdgeWebview2Setup.exe" () ()
+Goto: install_webview2
+Goto: webview2_done
+DetailPrint: "$(installingWebview2)"
+ExecWait: "$6 /silent /install" (->$1)
+!insertmacro: _If
+!insertmacro: end of _If
+DetailPrint: "$(webview2InstallSuccess)"
+!insertmacro: _Else
+!insertmacro: end of _Else
+DetailPrint: "$(webview2InstallError)"
+Abort: "$(webview2AbortError)"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _Else
+!insertmacro: end of _Else
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+SectionEnd
+Section: "Install"
+SetOutPath: "$INSTDIR"
+!insertmacro: CheckIfAppIsRunning
+!define: "UniqueID"="635.1"
+Plugin command: StrReplace $(appRunning) {{product_name}} SmartCaja
+Pop: $R1
+Plugin command: StrReplace $(appRunningOkKill) {{product_name}} SmartCaja
+Pop: $R2
+Plugin command: StrReplace $(failedToKillApp) {{product_name}} SmartCaja
+Pop: $R3
+Plugin command: FindProcessCurrentUser smartcaja.exe
+Pop: $R0
+!insertmacro: _If
+!insertmacro: end of _If
+IfSilent ?kill_635.1:0
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+Plugin command: KillProcessCurrentUser smartcaja.exe
+Pop: $R0
+Sleep: 500 ms
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Goto: app_check_done_635.1
+!insertmacro: _Else
+!insertmacro: end of _Else
+IfSilent ?silent_635.1:ui_635.1
+Plugin command: Call kernel32::AttachConsole(i -1)i.r0
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call kernel32::GetStdHandle(i -11)i.r0
+Plugin command: Call kernel32::SetConsoleTextAttribute(i r0, i 0x0004)
+FileWrite: $R1
+->$0
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: ""
+Abort: "$R3"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: "$R1"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!undef: "UniqueID"
+!insertmacro: end of CheckIfAppIsRunning
+File: "smartcaja.exe" 5661184 bytes
+File: "backend-x86_64-pc-windows-msvc.exe"->"backend.exe" 31923023 bytes
+WriteUninstaller: "$INSTDIR\uninstall.exe"
+WriteRegStr: SHCTX\Software\ccs\SmartCaja\=$INSTDIR
+ReadRegStr $OldMainBinaryName SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\MainBinaryName
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+Delete: "$INSTDIR\$OldMainBinaryName"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\MainBinaryName=smartcaja.exe
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\DisplayName=SmartCaja
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\DisplayIcon="$INSTDIR\smartcaja.exe"
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\DisplayVersion=2.0.1
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\Publisher=ccs
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\InstallLocation="$INSTDIR"
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\UninstallString="$INSTDIR\uninstall.exe"
+WriteRegDWORD: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\NoModify=1
+WriteRegDWORD: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\NoRepair=1
+!insertmacro: GetSizeCall
+!insertmacro: end of GetSizeCall
+IntOp: $0=$0+36703
+IntFmt: $0->$0 (fmt:0x%08X)
+WriteRegDWORD: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja\EstimatedSize=$0
+!insertmacro: MUI_STARTMENU_WRITE_BEGIN
+!insertmacro: end of MUI_STARTMENU_WRITE_BEGIN
+Call "CreateOrUpdateStartMenuShortcut"
+!insertmacro: MUI_STARTMENU_WRITE_END
+!insertmacro: end of MUI_STARTMENU_WRITE_END
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Call "CreateOrUpdateDesktopShortcut"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+SetAutoClose: true
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+SectionEnd
+Function: ".onInstSuccess"
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+Plugin command: RunAsUser $INSTDIR\smartcaja.exe $R0
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "un.onInit"
+!insertmacro: SetContext
+SetShellVarContext: current
+!insertmacro: _If
+!insertmacro: end of _If
+SetRegView: 64
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetContext
+!insertmacro: MUI_UNGETLANGUAGE
+!insertmacro: end of MUI_UNGETLANGUAGE
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $PassiveMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $UpdateMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Section: "Uninstall"
+!insertmacro: CheckIfAppIsRunning
+!define: "UniqueID"="753.1"
+File: "nsis_tauri_utils.dll"->"$PLUGINSDIR\nsis_tauri_utils.dll" 34304 bytes
+Plugin command: StrReplace $(appRunning) {{product_name}} SmartCaja
+Pop: $R1
+Plugin command: StrReplace $(appRunningOkKill) {{product_name}} SmartCaja
+Pop: $R2
+Plugin command: StrReplace $(failedToKillApp) {{product_name}} SmartCaja
+Pop: $R3
+Plugin command: FindProcessCurrentUser smartcaja.exe
+Pop: $R0
+!insertmacro: _If
+!insertmacro: end of _If
+IfSilent ?kill_753.1:0
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+Plugin command: KillProcessCurrentUser smartcaja.exe
+Pop: $R0
+Sleep: 500 ms
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Goto: app_check_done_753.1
+!insertmacro: _Else
+!insertmacro: end of _Else
+IfSilent ?silent_753.1:ui_753.1
+Plugin command: Call kernel32::AttachConsole(i -1)i.r0
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call kernel32::GetStdHandle(i -11)i.r0
+Plugin command: Call kernel32::SetConsoleTextAttribute(i r0, i 0x0004)
+FileWrite: $R1
+->$0
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: ""
+Abort: "$R3"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: "$R1"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!undef: "UniqueID"
+!insertmacro: end of CheckIfAppIsRunning
+Delete: "$INSTDIR\smartcaja.exe"
+Delete: "$INSTDIR\backend.exe"
+Delete: "$INSTDIR\uninstall.exe"
+RMDir: "$INSTDIR"
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: DeleteAppUserModelId
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{77f10cf0-3db5-4966-b520-b7c54fd35ed6}",i0,i0x1,g"{6332debf-87b5-4670-90c0-5e57b408a49e}",*p.r1)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->10(w)i("cl.ccs.smartcaja")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{86c14003-4d6b-4ef3-a7b4-0506663b2e68}",i0,i0x1,g"{12337D35-94C6-48A0-BCE7-6A9C69D4D600}",*p.r1)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->3(w)i("cl.ccs.smartcaja")i.r0
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of DeleteAppUserModelId
+!insertmacro: MUI_STARTMENU_GETFOLDER
+!insertmacro: end of MUI_STARTMENU_GETFOLDER
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\SmartCaja.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: UnpinShortcut
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}",i0,i0x1,g"{4CD19ADA-25A5-4A32-B3B7-347BEE5BE36B}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call SHELL32::SHCreateItemFromParsingName(ws, p0, g "{43826d1e-e718-42ee-bc55-a1e261c37bfe}", *p0r1) $SMPROGRAMS\$AppStartMenuFolder\SmartCaja.lnk
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(p)i(r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of UnpinShortcut
+Delete: "$SMPROGRAMS\$AppStartMenuFolder\SmartCaja.lnk"
+RMDir: "$SMPROGRAMS\$AppStartMenuFolder"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\SmartCaja.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: UnpinShortcut
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}",i0,i0x1,g"{4CD19ADA-25A5-4A32-B3B7-347BEE5BE36B}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call SHELL32::SHCreateItemFromParsingName(ws, p0, g "{43826d1e-e718-42ee-bc55-a1e261c37bfe}", *p0r1) $SMPROGRAMS\SmartCaja.lnk
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(p)i(r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of UnpinShortcut
+Delete: "$SMPROGRAMS\SmartCaja.lnk"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\SmartCaja.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: UnpinShortcut
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}",i0,i0x1,g"{4CD19ADA-25A5-4A32-B3B7-347BEE5BE36B}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call SHELL32::SHCreateItemFromParsingName(ws, p0, g "{43826d1e-e718-42ee-bc55-a1e261c37bfe}", *p0r1) $DESKTOP\SmartCaja.lnk
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(p)i(r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of UnpinShortcut
+Delete: "$DESKTOP\SmartCaja.lnk"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+DeleteRegKey: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\SmartCaja
+!insertmacro: _If
+!insertmacro: end of _If
+DeleteRegValue: HKCU\Software\Microsoft\Windows\CurrentVersion\Run\SmartCaja
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+DeleteRegKey: SHCTX\Software\ccs\SmartCaja
+DeleteRegKey: SHCTX\Software\ccs
+DeleteRegValue: HKCU\Software\ccs\SmartCaja\Installer Language
+DeleteRegKey: HKCU\Software\ccs\SmartCaja
+DeleteRegKey: HKCU\Software\ccs
+SetShellVarContext: current
+RMDir: /r "$APPDATA\cl.ccs.smartcaja"
+RMDir: /r "$LOCALAPPDATA\cl.ccs.smartcaja"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+SetAutoClose: true
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+SectionEnd
+Function: "RestorePreviousInstallLocation"
+ReadRegStr $4 SHCTX\Software\ccs\SmartCaja\
+StrCmp "$4" "" equal=+2, nonequal=0
+StrCpy $INSTDIR "$4" () ()
+FunctionEnd
+Function: "Skip"
+Abort: ""
+FunctionEnd
+Function: "SkipIfPassive"
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+FunctionEnd
+Function: "un.SkipIfPassive"
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+FunctionEnd
+Function: "CreateOrUpdateStartMenuShortcut"
+StrCpy $R0 "0" () ()
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\SmartCaja.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: SetShortcutTarget
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\SmartCaja.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->20(t)i(w "$INSTDIR\smartcaja.exe")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\SmartCaja.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetShortcutTarget
+StrCpy $R0 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\SmartCaja.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: SetShortcutTarget
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\SmartCaja.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->20(t)i(w "$INSTDIR\smartcaja.exe")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$SMPROGRAMS\SmartCaja.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetShortcutTarget
+StrCpy $R0 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+CreateShortcut: "$SMPROGRAMS\SmartCaja.lnk"->"$INSTDIR\smartcaja.exe"  icon:,0, nwd=0, showmode=0x0, hotkey=0x0, comment=
+!insertmacro: SetLnkAppUserModelId
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\SmartCaja.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}",.r2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call Oleaut32::SysAllocString(w "cl.ccs.smartcaja") i.r3
+Plugin command: Call *(&g16,&i4)("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}",5)p.r4
+Plugin command: Call *(&i2,&i6,&i8)(8,,&i4 $3)p.r5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->6(p,p)i($4,$5)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Call Oleaut32::SysFreeString($3)
+Plugin command: Free $4
+Plugin command: Free $5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->7()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$SMPROGRAMS\SmartCaja.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetLnkAppUserModelId
+FunctionEnd
+Function: "CreateOrUpdateDesktopShortcut"
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\SmartCaja.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: SetShortcutTarget
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\SmartCaja.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->20(t)i(w "$INSTDIR\smartcaja.exe")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$DESKTOP\SmartCaja.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetShortcutTarget
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+CreateShortcut: "$DESKTOP\SmartCaja.lnk"->"$INSTDIR\smartcaja.exe"  icon:,0, nwd=0, showmode=0x0, hotkey=0x0, comment=
+!insertmacro: SetLnkAppUserModelId
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\SmartCaja.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}",.r2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call Oleaut32::SysAllocString(w "cl.ccs.smartcaja") i.r3
+Plugin command: Call *(&g16,&i4)("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}",5)p.r4
+Plugin command: Call *(&i2,&i6,&i8)(8,,&i4 $3)p.r5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->6(p,p)i($4,$5)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Call Oleaut32::SysFreeString($3)
+Plugin command: Free $4
+Plugin command: Free $5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->7()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$DESKTOP\SmartCaja.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetLnkAppUserModelId
+FunctionEnd
+
+Processed 1 file, writing output (x86-unicode):
+Adding plug-ins initializing function... Done!
+Processing pages... Done!
+Removing unused resources... Done!
+Generating language tables... Done!
+Generating uninstaller... Done!
+
+Output: "C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\nsis\x64\nsis-output.exe"
+Install: 6 pages (384 bytes), 3 sections (6216 bytes), 1855 instructions (51940 bytes), 394 strings (14630 bytes), 1 language table (414 bytes).
+Uninstall: 2 pages (192 bytes), 1 section (2072 bytes), 616 instructions (17248 bytes), 196 strings (7304 bytes), 1 language table (274 bytes).
+Datablock optimizer saved 26498 bytes (~0.0%).
+
+Using lzma (compress whole) compression.
+
+EXE header size:               52736 / 38912 bytes
+Install code:                          (74048 bytes)
+Install data:                          (37695729 bytes)
+Uninstall code+data:                   (93690 bytes)
+Compressed data:            33639271 / 37863467 bytes
+CRC (0x7BEED4BE):                  4 / 4 bytes
+
+Total size:                 33692011 / 37902383 bytes (88.8%)
+    Finished [tauri_bundler::bundle] 2 bundles at:
+        C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\bundle\msi\SmartCaja_2.0.1_x64_en-US.msi
+        C:\Users\Oscar\AppData\Local\Temp\cursor-sandbox-cache\6aa219041f27a1ca6710bd48715e63c4\cargo-target\release\bundle\nsis\SmartCaja_2.0.1_x64-setup.exe
+
+
+=== tauri build --verbose terminó con código 0 ===

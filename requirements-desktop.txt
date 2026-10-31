@@ -1,0 +1,3 @@
+# Manifiesto del instalador (PyInstaller / sidecar). Solo este archivo.
+# No incluye gradio, transformers, accelerate, torch ni easyocr.
+-r requirements.txt
