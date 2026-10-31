@@ -106,6 +106,7 @@ struct ShutdownTarget {
 struct PendingStops(Mutex<Vec<ShutdownTarget>>);
 struct Navigated(Mutex<bool>);
 struct LastProbe(Mutex<String>);
+struct OllamaBootstrapBusy(AtomicBool);
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -181,6 +182,24 @@ fn retry_backend(app: tauri::AppHandle, port: tauri::State<BackendPort>) -> Resu
             detail
         ))
     }
+}
+
+#[tauri::command]
+fn retry_ollama(app: tauri::AppHandle, port: tauri::State<BackendPort>) -> Result<(), String> {
+    let busy = app.state::<OllamaBootstrapBusy>();
+    if busy.0.swap(true, Ordering::AcqRel) {
+        return Err("La descarga ya esta en curso.".into());
+    }
+    update_status(&app, |s| {
+        s.phase = "ollama".into();
+        s.message = "Reintentando descarga del motor de IA...".into();
+        s.percent = -1;
+        s.ollama_done = false;
+        s.can_continue = false;
+        s.backend_error = None;
+    });
+    bootstrap_ollama(app, port.0);
+    Ok(())
 }
 
 fn hidden_command(program: impl AsRef<std::ffi::OsStr>) -> Command {
@@ -312,7 +331,7 @@ fn ollama_http_agent() -> ureq::Agent {
         .timeout_connect(Duration::from_secs(30))
         .timeout_read(Duration::from_secs(6 * 3600))
         .timeout_write(Duration::from_secs(120))
-        .user_agent("SmartCaja-CCS portable-ollama")
+        .user_agent("SmartCaja-CCCE portable-ollama")
         .build()
 }
 
@@ -563,15 +582,102 @@ fn extract_archive(archive: &Path, dest: &Path) -> Result<(), String> {
     Err(format!("formato de archivo no soportado: {}", name))
 }
 
-fn download_url_with_progress(
+fn validate_download(path: &Path) -> Result<(), String> {
+    match std::fs::metadata(path) {
+        Ok(meta) if meta.is_file() && meta.len() > 0 => Ok(()),
+        Ok(_) => Err(format!("{} quedo vacio", path.display())),
+        Err(e) => Err(format!("{} no fue creado: {}", path.display(), e)),
+    }
+}
+
+fn promote_download(tmp: &Path, dest: &Path) -> Result<(), String> {
+    if dest.exists() {
+        let _ = std::fs::remove_file(dest);
+    }
+    std::fs::rename(tmp, dest).map_err(|e| format!("no se pudo finalizar descarga: {}", e))
+}
+
+fn download_with_curl(url: &str, tmp: &Path) -> Result<(), String> {
+    let program = if cfg!(windows) { "curl.exe" } else { "curl" };
+    let mut cmd = hidden_command(program);
+    cmd.args([
+        "--fail",
+        "--location",
+        "--silent",
+        "--show-error",
+        "--proto",
+        "=https",
+        "--proto-redir",
+        "=https",
+        "--connect-timeout",
+        "30",
+        "--max-time",
+        "21600",
+        "--retry",
+        "2",
+        "--retry-delay",
+        "2",
+        "--output",
+    ])
+    .arg(tmp)
+    .arg(url)
+    .stdout(Stdio::null())
+    .stderr(Stdio::piped());
+    match cmd.output() {
+        Ok(out) if out.status.success() => Ok(()),
+        Ok(out) => {
+            let err = String::from_utf8_lossy(&out.stderr);
+            Err(format!(
+                "{} termino con {}: {}",
+                program,
+                out.status,
+                err.trim()
+            ))
+        }
+        Err(e) => Err(format!("no se pudo ejecutar {}: {}", program, e)),
+    }
+}
+
+#[cfg(windows)]
+fn download_with_powershell(url: &str, tmp: &Path) -> Result<(), String> {
+    let script = concat!(
+        "$ProgressPreference='SilentlyContinue';",
+        "$ErrorActionPreference='Stop';",
+        "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;",
+        "Invoke-WebRequest -UseBasicParsing ",
+        "-Uri $env:SMARTCAJA_OLLAMA_URL ",
+        "-OutFile $env:SMARTCAJA_OLLAMA_DEST"
+    );
+    let mut cmd = hidden_command("powershell.exe");
+    cmd.args([
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        script,
+    ])
+    .env("SMARTCAJA_OLLAMA_URL", url)
+    .env("SMARTCAJA_OLLAMA_DEST", tmp)
+    .stdout(Stdio::null())
+    .stderr(Stdio::piped());
+    match cmd.output() {
+        Ok(out) if out.status.success() => Ok(()),
+        Ok(out) => {
+            let err = String::from_utf8_lossy(&out.stderr);
+            Err(format!("powershell.exe termino con {}: {}", out.status, err.trim()))
+        }
+        Err(e) => Err(format!("no se pudo ejecutar powershell.exe: {}", e)),
+    }
+}
+
+fn download_url_with_ureq(
     app: &tauri::AppHandle,
     url: &str,
     dest: &Path,
 ) -> Result<(), String> {
-    if let Some(parent) = dest.parent() {
-        let _ = std::fs::create_dir_all(parent);
-    }
-    ollama_log(&format!("Descargando {}", url));
+    ollama_log(&format!("Descargando con ureq {}", url));
     let resp = ollama_http_agent()
         .get(url)
         .call()
@@ -623,8 +729,64 @@ fn download_url_with_progress(
         }
     }
     drop(file);
-    std::fs::rename(&tmp, dest).map_err(|e| format!("no se pudo finalizar descarga: {}", e))?;
-    Ok(())
+    validate_download(&tmp)?;
+    promote_download(&tmp, dest)
+}
+
+fn download_url_with_progress(
+    app: &tauri::AppHandle,
+    url: &str,
+    dest: &Path,
+) -> Result<(), String> {
+    if let Some(parent) = dest.parent() {
+        let _ = std::fs::create_dir_all(parent);
+    }
+    ollama_log(&format!("Descargando {}", url));
+    let tmp = dest.with_extension("partial");
+    let _ = std::fs::remove_file(&tmp);
+    let mut errors = Vec::new();
+
+    update_status(app, |s| {
+        s.phase = "downloading".into();
+        s.message = "Descargando Ollama (motor de IA)...".into();
+        s.percent = -1;
+    });
+    match download_with_curl(url, &tmp).and_then(|()| validate_download(&tmp)) {
+        Ok(()) => return promote_download(&tmp, dest),
+        Err(e) => {
+            ollama_log(&format!("curl: {}", e));
+            errors.push(e);
+            let _ = std::fs::remove_file(&tmp);
+        }
+    }
+
+    #[cfg(windows)]
+    {
+        update_status(app, |s| {
+            s.phase = "downloading".into();
+            s.message = "Descargando Ollama (motor de IA)...".into();
+            s.percent = -1;
+        });
+        match download_with_powershell(url, &tmp).and_then(|()| validate_download(&tmp)) {
+            Ok(()) => return promote_download(&tmp, dest),
+            Err(e) => {
+                ollama_log(&format!("powershell: {}", e));
+                errors.push(e);
+                let _ = std::fs::remove_file(&tmp);
+            }
+        }
+    }
+
+    match download_url_with_ureq(app, url, dest) {
+        Ok(()) => Ok(()),
+        Err(e) => {
+            errors.push(e);
+            Err(format!(
+                "fallaron los descargadores: {}",
+                errors.join("; ")
+            ))
+        }
+    }
 }
 
 fn install_portable_ollama(app: &tauri::AppHandle) -> Result<PathBuf, String> {
@@ -1433,6 +1595,9 @@ fn pull_model_with_progress(app: &tauri::AppHandle, model: &str) -> bool {
 
 fn finish_ollama_bootstrap(app: &tauri::AppHandle, backend_port: u16) {
     ollama_log("== finish_ollama_bootstrap (post extra_models del perfil)");
+    app.state::<OllamaBootstrapBusy>()
+        .0
+        .store(false, Ordering::Release);
     {
         let blocked = app.state::<AppStatus>().0.lock().unwrap().phase == "blocked";
         if blocked {
@@ -1472,6 +1637,26 @@ fn finish_ollama_bootstrap(app: &tauri::AppHandle, backend_port: u16) {
         }
     });
     ollama_log("ollama_done=true; splash espera can_continue y luego location.replace('/')");
+}
+
+fn finish_ollama_failure(app: &tauri::AppHandle, backend_port: u16) {
+    app.state::<OllamaBootstrapBusy>()
+        .0
+        .store(false, Ordering::Release);
+    let _ = try_mark_backend_ready(app, backend_port);
+    update_status(app, |s| {
+        s.ollama_done = false;
+        s.can_continue = false;
+        s.percent = -1;
+        s.phase = "warning".into();
+        if s.message.is_empty() {
+            s.message =
+                "No se pudo descargar el motor de IA. Revisa tu conexión e inténtalo de nuevo."
+                    .into();
+        }
+        s.backend_error = Some(s.message.clone());
+    });
+    ollama_log("ollama_done=false; el splash se queda en warning (sin abrir la app)");
 }
 
 fn ensure_ollama_api(app: &tauri::AppHandle) -> bool {
@@ -1518,7 +1703,7 @@ fn ensure_ollama_api(app: &tauri::AppHandle) -> bool {
             update_status(app, |s| {
                 s.phase = "warning".into();
                 s.message =
-                    "No se pudo descargar Ollama. La app abrira sin IA.".into();
+                    "No se pudo descargar el motor de IA. Revisa tu conexión e inténtalo de nuevo.".into();
                 s.percent = -1;
             });
             false
@@ -1526,10 +1711,10 @@ fn ensure_ollama_api(app: &tauri::AppHandle) -> bool {
     }
 }
 
-fn pull_required_models(app: &tauri::AppHandle) {
+fn pull_required_models(app: &tauri::AppHandle) -> bool {
     if !ollama_http_healthy() {
         ollama_log("Omitiendo pull: API Ollama no disponible");
-        return;
+        return false;
     }
     let profile = profile_for_ram();
     persist_active_profile(&profile);
@@ -1541,16 +1726,26 @@ fn pull_required_models(app: &tauri::AppHandle) {
         );
         s.percent = -1;
     });
-    if pull_model_with_progress(app, &profile.model) {
-        ollama_log(&format!(
-            "Modelo {} listo en /api/tags; chat debe usar este si el agente pide otro",
-            profile.model
-        ));
+    if !pull_model_with_progress(app, &profile.model) {
+        ollama_log(&format!("No se pudo descargar el modelo {}", profile.model));
         update_status(app, |s| {
-            s.message = format!("Modelo {} listo.", profile.model);
-            s.percent = 100;
+            s.phase = "warning".into();
+            s.message = format!(
+                "No se pudo descargar el modelo {}. Revisa tu conexión e inténtalo de nuevo.",
+                profile.model
+            );
+            s.percent = -1;
         });
+        return false;
     }
+    ollama_log(&format!(
+        "Modelo {} listo en /api/tags; chat debe usar este si el agente pide otro",
+        profile.model
+    ));
+    update_status(app, |s| {
+        s.message = format!("Modelo {} listo.", profile.model);
+        s.percent = 100;
+    });
     ollama_log(&format!(
         "Modelo activo (RAM): {} extras={:?}",
         profile.model, profile.extra_models
@@ -1569,11 +1764,18 @@ fn pull_required_models(app: &tauri::AppHandle) {
             });
         }
     }
+    true
 }
 
 fn bootstrap_ollama(app: tauri::AppHandle, backend_port: u16) {
     std::thread::spawn(move || {
+        app.state::<OllamaBootstrapBusy>()
+            .0
+            .store(true, Ordering::Release);
         if shutdown_requested(&app) {
+            app.state::<OllamaBootstrapBusy>()
+                .0
+                .store(false, Ordering::Release);
             return;
         }
         let gb = ram_gb();
@@ -1589,6 +1791,9 @@ fn bootstrap_ollama(app: tauri::AppHandle, backend_port: u16) {
                 s.can_continue = false;
                 s.ollama_done = false;
             });
+            app.state::<OllamaBootstrapBusy>()
+                .0
+                .store(false, Ordering::Release);
             return;
         }
         update_status(&app, |s| {
@@ -1601,11 +1806,20 @@ fn bootstrap_ollama(app: tauri::AppHandle, backend_port: u16) {
             app_config().product_name
         ));
 
-        let _ = ensure_ollama_api(&app);
-        if shutdown_requested(&app) {
+        if !ensure_ollama_api(&app) {
+            finish_ollama_failure(&app, backend_port);
             return;
         }
-        pull_required_models(&app);
+        if shutdown_requested(&app) {
+            app.state::<OllamaBootstrapBusy>()
+                .0
+                .store(false, Ordering::Release);
+            return;
+        }
+        if !pull_required_models(&app) {
+            finish_ollama_failure(&app, backend_port);
+            return;
+        }
 
         ollama_log("bootstrap Ollama terminado; la app continua sin reiniciar");
         finish_ollama_bootstrap(&app, backend_port);
@@ -1623,9 +1837,11 @@ fn main() {
         .manage(AppStatus(Mutex::new(Status::initial())))
         .manage(Navigated(Mutex::new(false)))
         .manage(LastProbe(Mutex::new(String::new())))
+        .manage(OllamaBootstrapBusy(AtomicBool::new(false)))
         .invoke_handler(tauri::generate_handler![
             current_status,
             retry_backend,
+            retry_ollama,
             navigate_to_backend
         ])
         .setup(|app| {
@@ -1779,6 +1995,33 @@ fn main() {
             });
 
             bootstrap_ollama(handle.clone(), port);
+
+            let retry_handle = handle.clone();
+            std::thread::spawn(move || {
+                let flag = user_data_dir().join("retry_ollama.flag");
+                loop {
+                    if shutdown_requested(&retry_handle) {
+                        return;
+                    }
+                    if flag.is_file() {
+                        let _ = std::fs::remove_file(&flag);
+                        let busy = retry_handle.state::<OllamaBootstrapBusy>();
+                        if !busy.0.swap(true, Ordering::AcqRel) {
+                            ollama_log("retry_ollama.flag: reintentando descarga");
+                            update_status(&retry_handle, |s| {
+                                s.phase = "ollama".into();
+                                s.message = "Reintentando descarga del motor de IA...".into();
+                                s.percent = -1;
+                                s.ollama_done = false;
+                                s.can_continue = false;
+                                s.backend_error = None;
+                            });
+                            bootstrap_ollama(retry_handle.clone(), port);
+                        }
+                    }
+                    std::thread::sleep(Duration::from_millis(400));
+                }
+            });
 
             let ready_handle = handle.clone();
             std::thread::spawn(move || {

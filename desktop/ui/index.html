@@ -1,4 +1,4 @@
-﻿<!--
+<!--
   PLANTILLA DE SPLASH (editar aqui; no index.html — lo genera configure.mjs)
 
   En desktop Tauri: se sirve desde FastAPI en /__splash (mismo origen que la app).
@@ -26,7 +26,7 @@
       color: #fff; display: flex; flex-direction: column; align-items: center;
       justify-content: center; height: 100vh; text-align: center; gap: 20px; padding: 24px;
     }
-    .splash-logo { height: 64px; width: auto; max-width: min(280px, 70vw); object-fit: contain; display: block; }
+    .splash-logo { height: 72px; width: auto; max-width: min(280px, 70vw); object-fit: contain; display: block; }
     .brand { font-size: 34px; font-weight: 800; letter-spacing: 0.5px; }
     .brand .accent { color: var(--gold); }
     .sub { color: #c7d3ec; font-size: 14px; max-width: 460px; line-height: 1.5; }
@@ -36,6 +36,12 @@
     @keyframes slide { 0% { left: -40%; } 100% { left: 100%; } }
     .status { color: #dbe6ff; font-size: 13px; min-height: 18px; max-width: 460px; }
     .pct { color: var(--gold); font-weight: 700; font-size: 13px; min-height: 16px; }
+    .retry {
+      display: none; margin-top: 4px; border: 0; border-radius: 8px; cursor: pointer;
+      background: var(--gold); color: #0f2a5a; font-weight: 700; font-size: 13px;
+      padding: 10px 18px;
+    }
+    .retry.visible { display: inline-block; }
     .foot { position: absolute; bottom: 18px; color: #9fb2d6; font-size: 11px; }
   </style>
 </head>
@@ -47,6 +53,7 @@
   <div class="track indeterminate" id="track"><div class="fill" id="fill"></div></div>
   <div class="pct" id="pct"></div>
   <div class="status" id="status">Iniciando servicios...</div>
+  <button type="button" class="retry" id="retryBtn">Reintentar descarga</button>
   <div class="foot">Cámara Colombiana de Comercio Electrónico (CCCE)</div>
 
   <script>
@@ -54,6 +61,7 @@
     const pctEl = document.getElementById('pct');
     const fillEl = document.getElementById('fill');
     const trackEl = document.getElementById('track');
+    const retryBtn = document.getElementById('retryBtn');
 
     let navigated = false;
     const LOADING_MSG = 'Cargando la aplicación...';
@@ -100,13 +108,24 @@
 
     function render(s) {
       if (!s) return;
-      if ((s.phase || '') === 'blocked') {
+      const phase = s.phase || '';
+      if (phase === 'blocked') {
         trackEl.classList.remove('indeterminate');
         fillEl.style.width = '0%';
         pctEl.textContent = '';
+        retryBtn.classList.remove('visible');
         statusEl.textContent = s.message || 'Este equipo no cumple el mínimo de 8 GB de RAM.';
         return;
       }
+      if (phase === 'warning') {
+        trackEl.classList.remove('indeterminate');
+        fillEl.style.width = '0%';
+        pctEl.textContent = '';
+        retryBtn.classList.add('visible');
+        statusEl.textContent = s.message || 'No se pudo descargar el motor de IA.';
+        return;
+      }
+      retryBtn.classList.remove('visible');
       const err = s.backendError ?? s.backend_error;
       const can = !!(s.canContinue ?? s.can_continue);
       const done = !!(s.ollamaDone ?? s.ollama_done);
@@ -142,6 +161,25 @@
       t.core.invoke('current_status').then(render).catch(() => {});
     }
 
+    retryBtn.addEventListener('click', () => {
+      retryBtn.disabled = true;
+      statusEl.textContent = 'Reintentando descarga del motor de IA...';
+      retryBtn.classList.remove('visible');
+      const fail = () => {
+        retryBtn.disabled = false;
+        retryBtn.classList.add('visible');
+        statusEl.textContent = 'No se pudo reintentar. Cierra y vuelve a abrir la app.';
+      };
+      const t = window.__TAURI__;
+      if (t && t.core) {
+        t.core.invoke('retry_ollama').catch(fail);
+        return;
+      }
+      fetch('/api/desktop-retry', { method: 'POST', cache: 'no-store' })
+        .then((r) => { if (!r.ok) fail(); })
+        .catch(fail);
+    });
+
     if (onBackendSplash) {
       pollHttpStatus();
       setInterval(pollHttpStatus, 400);
@@ -164,4 +202,3 @@
   </script>
 </body>
 </html>
-

@@ -3,7 +3,7 @@
   "publisher": "Cámara Colombiana de Comercio Electrónico (CCCE)",
   "productName": "SmartCaja",
   "identifier": "co.org.ccce.smartcaja",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "dataDirName": "SmartCaja",
   "accent": "#F4C10E",
   "window": {

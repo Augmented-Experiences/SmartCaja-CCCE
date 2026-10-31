@@ -240,9 +240,12 @@ if ($Installer) {
     Write-Host "==> npm install (desktop)"
     npm install
   }
-  if (-not (Test-Path "src-tauri/icons/icon.ico")) {
-    Write-Host "==> Generating icons (npm run icon) - first time only"
-    npm run icon
+  Write-Host "==> Regenerating CCCE icons from brand/ccce-mark.png"
+  npm run icon
+  $iconIco = Join-Path $Desktop "src-tauri\icons\icon.ico"
+  if (Test-Path $iconIco) {
+    Copy-Item -LiteralPath $iconIco -Destination (Join-Path $Root "app\favicon.ico") -Force
+    Copy-Item -LiteralPath $iconIco -Destination (Join-Path $Desktop "ui\favicon.ico") -Force
   }
   npm run build
   if ($LASTEXITCODE -ne 0) {

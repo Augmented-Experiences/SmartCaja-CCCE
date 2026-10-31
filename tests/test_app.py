@@ -702,6 +702,9 @@ class TestSmartSuiteHardwareContract(unittest.TestCase):
             )
             self.assertTrue(blocked, f"{rel} debe quedarse en splash si phase es blocked")
             self.assertIn("Este equipo no cumple el mínimo de 8 GB de RAM.", html)
+            self.assertIn("phase === 'warning'", html)
+            self.assertIn("retryBtn", html)
+            self.assertIn("Reintentar descarga", html)
 
     def test_agents_ui_locks_profile_model(self):
         js = (ROOT / "app" / "app.js").read_text(encoding="utf-8")

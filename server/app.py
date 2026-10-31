@@ -2986,6 +2986,18 @@ async def desktop_status():
     return default
 
 
+@app.post("/api/desktop-retry")
+async def desktop_retry():
+    """El splash pide a Tauri que reintente la descarga de Ollama."""
+    flag = DATA_DIR / "retry_ollama.flag"
+    try:
+        flag.write_text("1", encoding="utf-8")
+        return {"ok": True}
+    except Exception as exc:
+        logger.warning("retry_ollama.flag: %s", exc)
+        raise HTTPException(status_code=500, detail="No se pudo pedir el reintento")
+
+
 @app.get("/api/desktop-ui")
 async def desktop_ui_status():
     """Diagnóstico para el instalador Tauri (UI empaquetada en el sidecar)."""
@@ -3041,7 +3053,7 @@ async def startup():
         )
     else:
         threading.Thread(target=ensure_ollama_running, daemon=True).start()
-    logger.info(f"SmartCaja v2.0.0 iniciado en puerto {PORT} ({sys.platform})")
+    logger.info(f"SmartCaja v2.0.2 iniciado en puerto {PORT} ({sys.platform})")
 
 
 # ---------------------------------------------------------------------------
