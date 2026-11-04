@@ -2,6 +2,8 @@
 
 Herramienta de flujo de caja inteligente con IA local para PYMEs, desarrollada como plugin para [Pinokio](https://pinokio.computer). Utiliza agentes conversacionales basados en **Ollama** y modelos **Meta Llama** para crear, analizar y proyectar flujos de caja de manera completamente offline. Un producto de la **Cámara Colombiana de Comercio Electrónico (CCCE)**, adaptado a la realidad tributaria y laboral de Colombia (COP, IVA DIAN, Régimen Simple, nómina y UVT).
 
+Documentación para desarrolladores e integradores: [Manual técnico](MANUAL_TECNICO.md).
+
 ## Adaptación Colombia (CCCE)
 
 SmartCaja-CCCE parte de SmartCaja-CCS y se ajusta a la operación de una PYME colombiana:
