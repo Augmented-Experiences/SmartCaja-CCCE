@@ -636,6 +636,11 @@ class TestSplashSingleWhiteLogo(unittest.TestCase):
         rust = (ROOT / "desktop" / "src-tauri" / "src" / "main.rs").read_text(encoding="utf-8")
         self.assertIn('.env("OLLAMA_MODEL"', rust)
         self.assertIn("active_model.txt", rust)
+        self.assertIn("SmartSuite", rust)
+        self.assertIn("ollama_engine_home", rust)
+        self.assertIn("ollama_app_state_dir", rust)
+        self.assertIn("model_tag_available", rust)
+        self.assertIn("kill_ollama_child: omitido", rust)
 
 
 class TestSmartSuiteHardwareContract(unittest.TestCase):
@@ -643,7 +648,7 @@ class TestSmartSuiteHardwareContract(unittest.TestCase):
 
     def test_config_tiers_and_access(self):
         cfg = json.loads((ROOT / "desktop" / "smartsuite.config.json").read_text(encoding="utf-8"))
-        self.assertEqual(cfg.get("version"), "2.0.1")
+        self.assertEqual(cfg.get("version"), "2.0.2")
         access = cfg.get("access") or {}
         self.assertEqual(access.get("blockBelowGb"), 7)
         self.assertEqual(access.get("warnBelowGb"), 13)
