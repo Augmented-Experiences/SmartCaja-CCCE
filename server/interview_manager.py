@@ -506,14 +506,12 @@ class InterviewManager:
             self._seed_field("age", self.company_data["age"])
         if self.company_data.get("nit"):
             self._seed_field("nit", self.company_data["nit"])
-        country = self.company_data.get("country")
-        currency = self.company_data.get("currency")
-        if country:
-            self._seed_field("country", country)
-        if currency:
-            self._seed_field("currency", currency)
-        if country or currency:
-            self._mark_topic_from_field("country")
+        # Colombia / COP es el valor inicial del motor CCCE; la entrevista solo confirma o cambia.
+        country = self.company_data.get("country") or "Colombia"
+        currency = self.company_data.get("currency") or "COP"
+        self._seed_field("country", country)
+        self._seed_field("currency", currency)
+        self._mark_topic_from_field("country")
         if self.company_data.get("initial_cash") and self.company_data["initial_cash"] > 0:
             self._seed_field("initial_cash", self.company_data["initial_cash"])
             self._mark_topic_from_field("initial_cash")
@@ -746,8 +744,8 @@ class InterviewManager:
             "Costos fijos estimados en $800.000/mes")
         salaries = get_or_assume("salaries_monthly", 1200000,
             "Salarios estimados en $1.200.000/mes")
-        marketing = get_or_assume("marketing_monthly", 100000,
-            "Marketing estimado en $100.000/mes")
+        marketing = get_or_assume("marketing_monthly", 1000000,
+            "Marketing estimado en $1.000.000/mes (escala COP para PYME colombiana)")
         tax_rate = get_or_assume("tax_rate_pct", defaults["tax_rate_pct"],
             f"Tasa impositiva estimada en {defaults['tax_rate_pct']}%")
         collection_days = get_or_assume("collection_days", defaults["collection_days"],
@@ -755,7 +753,7 @@ class InterviewManager:
         payment_days = get_or_assume("payment_days", defaults["payment_days"],
             f"Plazo de pago estimado en {defaults['payment_days']} días")
         initial_cash = get_or_assume("initial_cash", 10000000,
-            "Caja inicial estimada en $2.000.000")
+            "Caja inicial estimada en $10.000.000")
         growth_pct = get_or_assume("expected_growth_pct", 5,
             "Crecimiento esperado estimado en 5% anual")
         churn_pct = get_or_assume("churn_rate_pct", 5,

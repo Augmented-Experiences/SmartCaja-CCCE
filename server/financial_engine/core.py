@@ -116,7 +116,7 @@ class BusinessProfile:
     initial_cash: float = 0.0
     main_risks: List[str] = field(default_factory=list)
     currency: str = "COP"
-    country: str = ""
+    country: str = "Colombia"
     # Datos de mercado obtenidos de internet
     market_data: Dict[str, Any] = field(default_factory=dict)
 
@@ -439,8 +439,8 @@ class CashflowModel:
             capex_planned={int(k): v for k, v in profile_data.get("capex_planned", {}).items()},
             initial_cash=profile_data.get("initial_cash", data.get("initial_cash", 0)),
             main_risks=profile_data.get("main_risks", []),
-            currency=profile_data.get("currency", data.get("currency", "COP")),
-            country=profile_data.get("country", ""),
+            currency=profile_data.get("currency") or data.get("currency") or "COP",
+            country=profile_data.get("country") or data.get("country") or "Colombia",
             market_data=profile_data.get("market_data", {}),
         )
 
